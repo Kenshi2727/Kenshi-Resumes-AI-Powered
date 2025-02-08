@@ -1,0 +1,41 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  VITE_BASE_URL: '${{ secrets.VITE_BASE_URL }}'
+  VITE_CLERK_PUBLISHABLE_KEY: '${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}'
+  VITE_GOOGLE_AI_API_KEY: '${{ secrets.VITE_GOOGLE_AI_API_KEY }}'
+  VITE_STRAPI_API_KEY: '${{ secrets.VITE_STRAPI_API_KEY }}'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Get the Dockerfile for building
+        run: |
+          curl -O https://raw.githubusercontent.com/ObsidianMaximus/Kenshi-Resumes-AI-Powered/refs/heads/docker/Dockerfile
+        
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to ghcr.io
+        run: echo "${{ secrets.GHCR_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build --build-arg VITE_STRAPI_API_KEY=$VITE_STRAPI_API_KEY --build-arg VITE_BASE_URL=$VITE_BASE_URL --build-arg VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY --build-arg VITE_GOOGLE_AI_API_KEY=$VITE_GOOGLE_AI_API_KEY -t ghcr.io/obsidianmaximus/kenshi-resumes-ai-powered:latest .
+
+      - name: Push Docker image to GHCR
+        run: |
+          docker push ghcr.io/obsidianmaximus/kenshi-resumes-ai-powered:latest
