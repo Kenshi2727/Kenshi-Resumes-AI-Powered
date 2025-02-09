@@ -9,6 +9,7 @@ import { LoaderCircle } from 'lucide-react';
 import { toast } from "sonner";
 import { Brain } from 'lucide-react';
 import { chatSession } from './../../../../../service/AIModel';
+import { Howl, Howler } from 'howler';
 
 function Summary({ enabledNext }) {
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
@@ -26,6 +27,10 @@ function Summary({ enabledNext }) {
         console.log(result.response.text());
         setAiGeneratedSummaryList(JSON.parse(result.response.text()));
         toast("Please check the suggestions from our AI model");
+        var sound = new Howl({
+            src: ['/notif.mp3']
+        });
+        sound.play();
         setLoading(false);
     }
 
@@ -49,6 +54,10 @@ function Summary({ enabledNext }) {
             enabledNext(true);
             setLoading(false);
             toast("Your details have been saved successfully");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
 
         }, (err) => {
             console.log(err);

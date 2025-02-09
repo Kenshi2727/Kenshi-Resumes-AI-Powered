@@ -7,7 +7,7 @@ import { useParams } from 'react-router';
 import GlobalApi from './../../../../../service/GlobalApi';
 import { LoaderCircle } from 'lucide-react';
 import { toast } from "sonner"
-
+import { Howl, Howler } from 'howler';
 
 function PersonalDetails({ enabledNext }) {
     const params = useParams();
@@ -43,10 +43,18 @@ function PersonalDetails({ enabledNext }) {
             enabledNext(true);
             setLoading(false);
             toast("Your details have been saved successfully");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
 
         }, (err) => {
             console.log(err);
             toast("Some error occured, please  try again...");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
             setLoading(false);
         });
         enabledNext(true);

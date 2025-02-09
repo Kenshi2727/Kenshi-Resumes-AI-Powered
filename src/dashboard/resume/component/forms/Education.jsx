@@ -10,6 +10,7 @@ import { useParams } from 'react-router';
 import GlobalApi from './../../../../../service/GlobalApi';
 import { toast } from "sonner";
 import { useRef } from 'react';
+import { Howl, Howler } from 'howler';
 
 function Education() {
     const startDateRef = useRef(null);
@@ -59,9 +60,17 @@ function Education() {
             console.log(res);
             setLoading(false);
             toast("Your details have been saved successfully");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
         }, (err) => {
             console.log(err);
             toast("Something went wrong!Please try again...");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
             setLoading(false);
         });
     }

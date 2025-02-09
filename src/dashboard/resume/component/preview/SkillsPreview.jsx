@@ -4,12 +4,12 @@ function SkillsPreview({ resumeInfo }) {
     return (
         <div className='my-6'>
             <h2 className='text-center font-bold text-sm mb-2'
-                style={{ color: resumeInfo?.themeColor }}>
+                style={{ color: resumeInfo?.themeColor || "#3357FF" }}>
                 Skills
             </h2>
 
             <hr style={{
-                borderColor: resumeInfo?.themeColor
+                borderColor: resumeInfo?.themeColor || "#3357FF"
             }} />
 
             <div className='grid grid-cols-2 gap-3 my-4'>
@@ -21,7 +21,7 @@ function SkillsPreview({ resumeInfo }) {
                         <div className='h-2 bg-gray-200 w-[120px]'>
                             <div className='h-2'
                                 style={{
-                                    backgroundColor: resumeInfo?.themeColor,
+                                    backgroundColor: resumeInfo?.themeColor || "#3357FF",
                                     width: skill.rating + '% ' //width of the progress bar
                                 }}>
                             </div>

@@ -4,12 +4,12 @@ function ExperiencePreview({ resumeInfo }) {
     return (
         <div className='my-6'>
             <h2 className='text-center font-bold text-sm mb-2'
-                style={{ color: resumeInfo?.themeColor }}>
+                style={{ color: resumeInfo?.themeColor || "#3357FF" }}>
                 Professional Experience
             </h2>
 
             <hr style={{
-                borderColor: resumeInfo?.themeColor
+                borderColor: resumeInfo?.themeColor || "#3357FF"
             }} />
 
             {/*using () does not need return keyword */}
@@ -17,7 +17,7 @@ function ExperiencePreview({ resumeInfo }) {
                 <div key={index} className='my-5'>
                     <h2 className='text-sm font-bold'
                         style={{
-                            color: resumeInfo?.themeColor
+                            color: resumeInfo?.themeColor || "#3357FF"
                         }}>
                         {experience?.title}
                     </h2>

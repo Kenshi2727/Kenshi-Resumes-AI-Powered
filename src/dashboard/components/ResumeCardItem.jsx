@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import GlobalApi from '../../../service/GlobalApi'
 import { toast } from 'sonner'
+import { Howl, Howler } from 'howler';
 
 function ResumeCardItem({ resume, refreshData }) {
     const [loading, setLoading] = useState(false);
@@ -36,6 +37,10 @@ function ResumeCardItem({ resume, refreshData }) {
         GlobalApi.DeleteResumeById(resume.documentId).then(res => {
             console.log(res);
             toast("Your resume has been deleted!😱");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
             refreshData();//calls getResumeList() to fetch latest data
             setOpenAlert(false);
             setLoading(false);

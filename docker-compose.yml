@@ -1,0 +1,18 @@
+# Avoid changing any values here, instead change them in example.env and rename that to .env
+name: kenshi-resumes-ai-powered
+services:
+  app:
+    image: ghcr.io/obsidianmaximus/kenshi-resumes-ai-powered:latest
+    ports:
+      # You can change the host port, i.e, 80 to whatever you want.
+      - '${PORT}:4173'
+    environment:
+      # Environment variables for dynamic runtime configuration.
+      # These values will be injected into your runtime config file
+      # Set these values to your actual values
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+      VITE_GOOGLE_AI_API_KEY: ${VITE_GOOGLE_AI_API_KEY}
+      VITE_STRAPI_API_KEY: ${VITE_STRAPI_API_KEY}
+      VITE_BASE_URL: ${VITE_BASE_URL}
+
+    restart: unless-stopped  # Automatically restart the container unless it is explicitly stopped

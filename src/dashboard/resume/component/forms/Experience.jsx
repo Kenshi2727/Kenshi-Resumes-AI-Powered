@@ -9,6 +9,7 @@ import { useParams } from 'react-router';
 import { LoaderCircle } from 'lucide-react';
 import { toast } from "sonner";
 import { useRef } from 'react';
+import { Howl, Howler } from 'howler';
 
 const formField = {
     title: '',
@@ -99,6 +100,10 @@ function Experience() {
             console.log(res);
             setLoading(false);
             toast('Details updated !')
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
         }, (error) => {
             setLoading(false);
         })

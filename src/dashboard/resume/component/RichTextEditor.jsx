@@ -24,6 +24,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { toast } from 'sonner';
 import { useContext } from 'react';
 import { chatSession } from './../../../../service/AIModel';
+import { Howl, Howler } from 'howler';
 
 const PROMPT =
     `
@@ -61,6 +62,10 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
         if (!resumeInfo?.Experience[index]?.title) {
             console.log(index);
             toast("Please add a position title to generate the summary");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
             setLoading(false);
             return;//if the user has not selected a position title, show a toast message and return
         }

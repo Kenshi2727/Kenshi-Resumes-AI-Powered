@@ -6,12 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  VITE_BASE_URL: '${{ secrets.VITE_BASE_URL }}'
-  VITE_CLERK_PUBLISHABLE_KEY: '${{ secrets.VITE_CLERK_PUBLISHABLE_KEY }}'
-  VITE_GOOGLE_AI_API_KEY: '${{ secrets.VITE_GOOGLE_AI_API_KEY }}'
-  VITE_STRAPI_API_KEY: '${{ secrets.VITE_STRAPI_API_KEY }}'
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -34,7 +28,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build --build-arg VITE_STRAPI_API_KEY=$VITE_STRAPI_API_KEY --build-arg VITE_BASE_URL=$VITE_BASE_URL --build-arg VITE_CLERK_PUBLISHABLE_KEY=$VITE_CLERK_PUBLISHABLE_KEY --build-arg VITE_GOOGLE_AI_API_KEY=$VITE_GOOGLE_AI_API_KEY -t ghcr.io/obsidianmaximus/kenshi-resumes-ai-powered:latest .
+          docker build -t ghcr.io/obsidianmaximus/kenshi-resumes-ai-powered:latest .
 
       - name: Push Docker image to GHCR
         run: |

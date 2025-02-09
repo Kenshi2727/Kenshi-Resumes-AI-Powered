@@ -11,6 +11,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { useContext } from 'react';
 import GlobalApi from './../../../../../service/GlobalApi';
 import { useParams } from 'react-router';
+import { Howl, Howler } from 'howler';
 
 function Skills() {
     const { resumeId } = useParams();
@@ -50,9 +51,17 @@ function Skills() {
             console.log(res);
             setLoading(false);
             toast("Your details have been saved successfully");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
         }, (err) => {
             console.log(err);
             toast("Server Error, please try again!");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
             setLoading(false);
         });
     }

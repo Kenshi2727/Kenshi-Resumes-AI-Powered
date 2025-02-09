@@ -10,6 +10,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext'
 import { useParams } from 'react-router'
 import GlobalApi from '../../../../service/GlobalApi'
 import { toast } from 'sonner'
+import { Howl, Howler } from 'howler';
 
 function ThemeColor() {
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
@@ -30,6 +31,10 @@ function ThemeColor() {
         GlobalApi.UpdateResumeDetail(resumeId, data).then(res => {
             console.log(res);
             toast("Theme Color Updated🎨🖌️");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
         })
     }
 
