@@ -7,6 +7,7 @@ import { ThemeContext } from '../../context/ThemeContext'
 import { useContext } from 'react'
 import { ModeToggle } from '../ui/mode-toggle'
 import { light, dark } from '@clerk/themes'
+import { BookMarked } from 'lucide-react'
 
 function Header({ state }) {
     const { user, isSignedIn, isLoaded } = useUser();
@@ -23,7 +24,8 @@ function Header({ state }) {
                         <div className='flex gap-2 items-center'>
                             <ModeToggle />
                             <Link to={'/dashboard'}>
-                                <Button variant="outline" className={(theme === 'dark') ? 'text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]' : ''}>Dashboard Button</Button>
+                                <Button variant="outline" className={(theme === 'dark') ? 'hidden sm:block text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]' : 'hidden sm:block'}>Dashboard Button</Button>
+                                <Button variant="outline" className={(theme === 'dark') ? 'block sm:hidden text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]' : 'block sm:hidden'}> <BookMarked /></Button>
                             </Link>
                             <UserButton
                                 appearance={
