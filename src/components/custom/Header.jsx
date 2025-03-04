@@ -25,7 +25,7 @@ function Header({ state }) {
                             <ModeToggle />
                             <Link to={'/dashboard'}>
                                 <Button variant="outline" className={(theme === 'dark') ? 'hidden sm:block text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]' : 'hidden sm:block'}>Dashboard Button</Button>
-                                <Button variant="outline" className={(theme === 'dark') ? 'block sm:hidden text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]' : 'block sm:hidden'}> <BookMarked /></Button>
+                                <Button variant="outline" size="icon" className={(theme === 'dark') ? 'sm:hidden flex justify-center items-center text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]' : 'flex justify-center items-center sm:hidden'}> <BookMarked /></Button>
                             </Link>
                             <UserButton
                                 appearance={
