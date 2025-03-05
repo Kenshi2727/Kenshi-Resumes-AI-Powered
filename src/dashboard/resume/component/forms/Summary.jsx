@@ -78,7 +78,7 @@ function Summary({ enabledNext }) {
                 <form className='mt-7' onSubmit={onSave}>
                     <div className='flex justify-between items-end'>
                         <label>Add Summary</label>
-                        <Button type="button" onClick={() => GenerateSummaryFromAI()} className={(theme === 'light') ? "border-primary text-[rgba(0,191,255,0.8)] flex gap-2" : "border-[rgba(0,191,255,0.8)] text-[rgba(0,191,255,0.8)] flex gap-2"} variant="outline" size="sm"><Brain className="h-4 w-4" />Generate using AI</Button>
+                        <Button type="button" onClick={() => GenerateSummaryFromAI()} className={(theme === 'light') ? "border-primary text-primary flex gap-2" : "border-[rgba(0,191,255,0.8)] text-[rgba(0,191,255,0.8)] flex gap-2"} variant="outline" size="sm"><Brain className="h-4 w-4" />Generate using AI</Button>
                     </div>
                     <Textarea
                         placeholder="Write your own or can see the magic of AI"
