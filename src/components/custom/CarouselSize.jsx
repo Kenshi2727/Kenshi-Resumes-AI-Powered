@@ -19,7 +19,7 @@ export function CarouselSize() {
             opts={{
                 align: "start",
             }}
-            className={(theme === 'light') ? "w-[40%] md:w-[60%] xs:w-full max-w-sm md:max-w-full h-50" : "w-[40%] md:w-[60%] xs:w-full max-w-sm md:max-w-full h-50 shadow-2xl shadow-[rgba(0,191,255,0.8)]"}
+            className={(theme === 'light') ? "w-[60%] md:w-[60%] xs:w-full max-w-sm md:max-w-full h-50" : "w-[60%] sm:w-[40%] md:w-[60%] xs:w-full max-w-sm md:max-w-full h-50 shadow-2xl shadow-[rgba(0,191,255,0.8)]"}
         >
             <CarouselContent>
                 {data.map((item, index) => (
