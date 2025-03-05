@@ -28,7 +28,7 @@ function Home() {
                             </Link>
                         </div>
 
-                        <div className='my-5 flex justify-center'>
+                        <div className='my-5 flex justify-center items-center'>
                             <CarouselSize />
                         </div>
                     </div>

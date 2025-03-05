@@ -1,6 +1,6 @@
 import * as React from "react"
 
-import { Card, CardContent } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardFooter, CardTitle, CardDescription } from "@/components/ui/card"
 import {
     Carousel,
     CarouselContent,
@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/carousel"
 import { ThemeContext } from "@/context/ThemeContext"
 import { useContext } from "react"
+import data from "@/data/CarouselData"
 
 export function CarouselSize() {
     const { theme } = useContext(ThemeContext);
@@ -18,16 +19,23 @@ export function CarouselSize() {
             opts={{
                 align: "start",
             }}
-            className="md:w-full sm:w-64 w-56"
+            className={(theme === 'light') ? "w-[40%] md:w-[60%] xs:w-full max-w-sm md:max-w-full h-50" : "w-[40%] md:w-[60%] xs:w-full max-w-sm md:max-w-full h-50 shadow-2xl shadow-[rgba(0,191,255,0.8)]"}
         >
             <CarouselContent>
-                {Array.from({ length: 5 }).map((_, index) => (
-                    <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                {data.map((item, index) => (
+                    <CarouselItem key={index} className={(theme === 'light') ? "pl-1 md:basis-1/2 lg:basis-[40%] shadow-md" : "pl-1 md:basis-1/2 lg:basis-[40%] shadow-xl shadow-[rgba(0,191,255,0.8)]"}>
                         <div className="p-1">
                             <Card>
-                                <CardContent className={(theme === 'light') ? "flex aspect-square items-center justify-center p-6 shadow-md" : "flex aspect-square items-center justify-center p-6 shadow-2xl shadow-[rgba(0,191,255,0.8)]"}>
-                                    <span className="text-3xl font-semibold">{index + 1}</span>
+                                <CardHeader>
+                                    <CardTitle>{item.headline}</CardTitle>
+                                    <CardDescription>{item.subheadline}</CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p>{item.description}</p>
                                 </CardContent>
+                                <CardFooter>
+                                    <img src={item.image} className="rounded-xl" alt={item.alt} height="150px" width="230px" />
+                                </CardFooter>
                             </Card>
                         </div>
                     </CarouselItem>
