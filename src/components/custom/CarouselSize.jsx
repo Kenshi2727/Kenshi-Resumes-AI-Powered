@@ -8,8 +8,11 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel"
+import { ThemeContext } from "@/context/ThemeContext"
+import { useContext } from "react"
 
 export function CarouselSize() {
+    const { theme } = useContext(ThemeContext);
     return (
         <Carousel
             opts={{
@@ -22,7 +25,7 @@ export function CarouselSize() {
                     <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                         <div className="p-1">
                             <Card>
-                                <CardContent className="flex aspect-square items-center justify-center p-6">
+                                <CardContent className={(theme === 'light') ? "flex aspect-square items-center justify-center p-6 shadow-md" : "flex aspect-square items-center justify-center p-6 shadow-2xl shadow-[rgba(0,191,255,0.8)]"}>
                                     <span className="text-3xl font-semibold">{index + 1}</span>
                                 </CardContent>
                             </Card>
@@ -30,8 +33,8 @@ export function CarouselSize() {
                     </CarouselItem>
                 ))}
             </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
+            <CarouselPrevious className={(theme === 'dark') ? 'hover:border-[rgba(0,191,255,0.8)]' : ''} />
+            <CarouselNext className={(theme === 'dark') ? 'hover:border-[rgba(0,191,255,0.8)]' : ''} />
         </Carousel>
     )
 }
