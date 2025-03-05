@@ -17,7 +17,7 @@ function Home() {
             <Header />
             <div className={(theme === 'light') ? 'bg-[url("../textures/batthern.png")]' : ''}>
                 <div className='min-h-screen flex justify-center items-center'>
-                    <div className='flex flex-col gap-2'>
+                    <div className='flex flex-col gap-2 mt-10'>
                         <h1 className='font-serif text-center mb-10'>Welcome to <span className={(theme === 'light') ? 'bg-gradient-to-r from-violet-400 to-indigo-600 p-2 border rounded-xl text-white text-2xl sm:text-5xl whitespace-nowrap shadow-xl shadow-primary' : 'p-2 border-2 border-white rounded-xl text-white text-2xl sm:text-5xl whitespace-nowrap shadow-xl shadow-[rgba(0,191,255,0.8)]'}>Kenshi Resumes</span> </h1>
                         <h3 className={(theme === 'light') ? 'text-center font-medium text-xs sm:text-base' : 'text-center font-bold text-sm sm:text-base'}>"Leverage the potential of AI to set yourself apart from the competition."</h3>
                         <div className='flex justify-center'>
