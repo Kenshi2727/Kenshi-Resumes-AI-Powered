@@ -28,6 +28,8 @@ export function ModeToggle() {
                 <DropdownMenuItem onClick={() => {
                     setTheme("light")
                     setCustomTheme("light")
+                    /*if not removed shadcn will remain in dark mode as it treats it as a tailwindcss class instead of a custom class*/
+                    document.body.classList.remove("dark");
                 }
                 }>
                     Light
@@ -35,6 +37,7 @@ export function ModeToggle() {
                 <DropdownMenuItem onClick={() => {
                     setTheme("dark")
                     setCustomTheme("dark")
+                    document.body.classList.add("dark")
                 }}>
                     Dark
                 </DropdownMenuItem>

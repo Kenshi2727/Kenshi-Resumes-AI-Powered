@@ -10,6 +10,40 @@
   }
 }
 
+/*scrollbar styling*/
+/* Width and color */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track (background) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle (scrollbar itself) */
+::-webkit-scrollbar-thumb {
+  background: #747bff;
+  border:#ffffff solid 1px;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #535bf2;
+}
+
+/* Dark Mode Scrollbar */
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(0,191,255,0.8);
+  border: 2px solid #1a1a1a;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #1a1a1a;
+  border-radius: 10px;
+}
 
 /*definition for downloading pdf*/
 @media print{
