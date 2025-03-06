@@ -146,7 +146,7 @@ function Education({ enabledNext }) {
             </div>
             <div className='flex justify-between'>
                 <div className='sm:flex-row gap-2 flex flex-col'>
-                    <Button variant="outline" onClick={AddNewEducation} className={(theme === 'light') ? "text-primary" : "text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]"}>+ Add More Education</Button>
+                    <Button variant="outline" onClick={AddNewEducation} className={(theme === 'light') ? "text-primary" : "text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]"}>+ Add</Button>
                     <Button variant="outline" onClick={RemoveEducation} className={(theme === 'light') ? "text-primary" : "text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]"}>- Remove</Button>
                 </div>
 

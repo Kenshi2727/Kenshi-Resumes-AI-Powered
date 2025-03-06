@@ -84,13 +84,24 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
             <div className='flex justify-between items-center my-2'>
                 <label className='text-xs'>Summery</label>
                 <Button variant="outline" size="sm"
-                    className={(theme === 'light') ? "flex gap-2 border-primary text-primary" : "flex gap-2 hover:border-[rgba(0,191,255,0.8)] border-[rgba(0,191,255,0.8)] text-[rgba(0,191,255,0.8)]"}
+                    className={(theme === 'light') ? "sm:flex gap-2 border-primary text-primary hidden" : "sm:flex gap-2 hover:border-[rgba(0,191,255,0.8)] border-[rgba(0,191,255,0.8)] text-[rgba(0,191,255,0.8)] hidden"}
                     onClick={GenerateSummaryFromAI}>
                     {
                         loading ?
                             <LoaderCircle className='animate-spin' /> :
                             <>
                                 <Brain className='h-4 w-4' />Generate from AI
+                            </>
+                    }
+                </Button>
+                <Button variant="outline" size="sm"
+                    className={(theme === 'light') ? "flex gap-2 border-primary text-primary sm:hidden" : "flex gap-2 hover:border-[rgba(0,191,255,0.8)] border-[rgba(0,191,255,0.8)] text-[rgba(0,191,255,0.8)] sm:hidden"}
+                    onClick={GenerateSummaryFromAI}>
+                    {
+                        loading ?
+                            <LoaderCircle className='animate-spin' /> :
+                            <>
+                                <Brain className='h-4 w-4' />AI
                             </>
                     }
                 </Button>
