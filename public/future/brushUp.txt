@@ -1,5 +1,3 @@
-destructive toast and button color neon blue
-automatic carousel display
 custom nodejs backend 
 documentation
 blog content/about section
