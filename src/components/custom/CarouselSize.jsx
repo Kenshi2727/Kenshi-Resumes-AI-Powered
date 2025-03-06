@@ -25,16 +25,16 @@ export function CarouselSize() {
                 {data.map((item, index) => (
                     <CarouselItem key={index} className={(theme === 'light') ? "pl-1 md:basis-1/2 lg:basis-[40%] shadow-md" : "pl-1 md:basis-1/2 lg:basis-[40%] shadow-xl shadow-[rgba(0,191,255,0.8)]"}>
                         <div className="p-1">
-                            <Card>
+                            <Card className="h-[420px] sm:h-[400px] md:h-[450px] xl:h-[400px] max-w-[300px] box-border">
                                 <CardHeader>
-                                    <CardTitle>{item.headline}</CardTitle>
-                                    <CardDescription>{item.subheadline}</CardDescription>
+                                    <CardTitle className="text-xl">{item.headline}</CardTitle>
+                                    <CardDescription className="text-sm font-medium">{item.subheadline}</CardDescription>
                                 </CardHeader>
-                                <CardContent>
+                                <CardContent className="text-sm">
                                     <p>{item.description}</p>
                                 </CardContent>
-                                <CardFooter>
-                                    <img src={item.image} className="rounded-xl" alt={item.alt} height="150px" width="230px" />
+                                <CardFooter className="h-[150px] w-full flex justify-center items-center">
+                                    <img src={item.image} className="h-[140px] rounded-xl" alt={item.alt} width="230px" />
                                 </CardFooter>
                             </Card>
                         </div>

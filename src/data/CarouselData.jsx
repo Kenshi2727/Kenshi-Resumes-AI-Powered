@@ -3,7 +3,7 @@ export default [
         "index": 1,
         "headline": "Let AI Build Your Resume Instantly!",
         "subheadline": "Fast, Accurate, and Hassle-Free",
-        "description": "Generate professional resumes with AI—fast, accurate, and hassle-free!",
+        "description": "Generate professional resumes with AI—fast, accurate, hassle-free, and tailored to your career needs!",
         "image": "/caro1.jpg",
         "alt": "AI-generated resume preview"
     },
@@ -27,7 +27,7 @@ export default [
         "index": 4,
         "headline": "Get Your Resume in Seconds!",
         "subheadline": "Download in PDF",
-        "description": "Download your resume in PDF easily and start applying today!You can share your resume with a link or a QR code.",
+        "description": "Download your resume in PDF easily and start applying today! Share your resume with your recruiter.",
         "image": "/caro4.png",
         "alt": "Download resume button"
     },
