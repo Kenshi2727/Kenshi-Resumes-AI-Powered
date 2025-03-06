@@ -18,15 +18,16 @@ function Dashboard() {
         user && GetResumesList(); //if user is present then get the resume list
     }, [user]);
 
-    useEffect(() => {
-        resumeList.length > 0 ? setLoading(false) : null;
-    }, [resumeList]);
+    // useEffect(() => {
+    //     resumeList > 0 ? setLoading(false) : null;
+    // }, [resumeList]);
 
     //function to get resume list
     const GetResumesList = () => {
         GlobalApi.GetUserResumes(user?.primaryEmailAddress?.emailAddress).then(res => {
             console.log(res.data.data);
             setResumeList(res.data.data);
+            setLoading(false);
         })
     }
 
