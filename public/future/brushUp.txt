@@ -1,0 +1,10 @@
+destructive toast and button color neon blue
+automatic carousel display
+custom nodejs backend 
+documentation
+blog content/about section
+
+future optional---->
+more resume templates
+ATS checker
+animations on heading and logo
