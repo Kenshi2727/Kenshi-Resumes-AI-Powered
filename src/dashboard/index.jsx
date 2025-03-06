@@ -6,6 +6,7 @@ import ResumeCardItem from './components/ResumeCardItem';
 import { ThemeContext } from '@/context/ThemeContext';
 import { useContext } from 'react';
 import { SkeletonCard } from '@/components/custom/SkeletonCard';
+import { toast } from 'sonner';
 
 
 function Dashboard() {
@@ -25,8 +26,13 @@ function Dashboard() {
     //function to get resume list
     const GetResumesList = () => {
         GlobalApi.GetUserResumes(user?.primaryEmailAddress?.emailAddress).then(res => {
-            console.log(res.data.data);
-            setResumeList(res.data.data);
+            try {
+                console.log(res.data.data);
+                setResumeList(res.data.data);
+            } catch (error) {
+                toast.error('Something went wrong!');
+                console.log(error);
+            }
             setLoading(false);
         })
     }

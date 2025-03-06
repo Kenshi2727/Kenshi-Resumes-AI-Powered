@@ -39,7 +39,7 @@ function ResumeCardItem({ resume, refreshData }) {
         setLoading(true);
         GlobalApi.DeleteResumeById(resume.documentId).then(res => {
             console.log(res);
-            toast("Your resume has been deleted!😱");
+            toast.error("Your resume has been deleted!😱");
             var sound = new Howl({
                 src: ['/notif.mp3']
             });
@@ -83,6 +83,7 @@ function ResumeCardItem({ resume, refreshData }) {
                             <AlertDialogFooter>
                                 <AlertDialogCancel onClick={() => setOpenAlert(false)}>Cancel</AlertDialogCancel>
                                 <AlertDialogAction onClick={onDelete}
+                                    className={(theme === 'dark') ? 'bg-[rgba(0,191,255,0.8)] hover:bg-[rgba(0,191,255,0.8)]' : ''}
                                     disabled={loading}>
                                     {loading ? 'Deleting...' : 'Continue'}
                                 </AlertDialogAction>

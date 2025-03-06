@@ -78,7 +78,11 @@ function AddResume() {
                         {/*editing dialog box*/}
                         <div className='flex justify-end gap-5'>
                             <Button onClick={() => setOpenDialog(false)} variant="ghost" className="text-white">Cancel</Button>
-                            <Button disabled={!resumeTitle || loading} onClick={onCreate}>
+                            <Button
+                                disabled={!resumeTitle || loading}
+                                onClick={onCreate}
+                                className={(theme === 'dark') ? 'bg-[rgba(0,191,255,0.8)] hover:bg-[rgba(0,191,255,0.8)]' : ''}
+                            >
                                 {loading ? <Loader2 className='animate-spin' /> : 'Create'}
                             </Button>
                         </div>
