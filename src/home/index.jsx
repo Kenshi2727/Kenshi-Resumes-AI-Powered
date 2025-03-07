@@ -39,7 +39,7 @@ function Home() {
                         <div>
                             <h3 className={(theme === 'light') ? 'text-center font-medium text-xs sm:text-base' : 'text-center font-medium text-xs sm:text-base'}>{displayedText}</h3>
                         </div>
-                        <div className='flex justify-center'>
+                        <div className='flex justify-center mr-1'>
                             <Link to={isSignedIn ? '/dashboard' : '/auth/sign-in'}>
                                 <Button className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
                                     {isSignedIn ? 'Go to Dashboard' : 'Sign In / Sign Up'} {isSignedIn ? <BookMarked /> : <ListStart />}
