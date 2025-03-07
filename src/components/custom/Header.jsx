@@ -24,7 +24,7 @@ function Header({ state }) {
     return (
         <div className={(theme === 'light') ? 'bg-gradient-to-r from-red-200 to-yellow-200 relative' : 'bg-[#000] relative'}>
             <div className={(theme === 'light') ? 'bg-[url("../../textures/subtle-zebra-3d.png")] p-3 px-5 flex justify-between items-center shadow-md' : 'p-3 px-5 flex justify-between items-center shadow-lg shadow-[rgba(0,191,255,0.8)]'}>
-                <div className='flex justify-center items-center gap-4'>
+                <div className='flex justify-center items-center gap-4 mr-1'>
                     <SidebarTrigger className={(theme === 'light') ? 'text-primary bg-white border-primary' : 'hover:border-[rgba(0,191,255,0.8)]'} onClick={() => {
                         console.log("Toggling sidebar:", !open);
                         setOpen(!open);
