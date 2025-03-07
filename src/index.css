@@ -11,33 +11,6 @@
   }
 }
 
-/*typing animation*/
-.typing{
-  /*font-family: monospace;*/ /*to match CSS standard for ch uit size*/
-  overflow: hidden;
-  width: 100%;/*hit and try to match ch unit equivalent width*/
-  border-right: 3px solid;
-  animation: typing 2s steps(74), blink .5s step-end infinite alternate,hide-cursor 0s 2s forwards;
-}
-
-@keyframes typing {
-  from {
-    width: 0
-  }
-}
-    
-@keyframes blink {
-  50% {
-    border-color: transparent
-  }
-}
-
-@keyframes hide-cursor {
-  to {
-    border-right-color: transparent;
-  }
-}
-
 /*scrollbar styling*/
 /* Width and color */
 ::-webkit-scrollbar {
