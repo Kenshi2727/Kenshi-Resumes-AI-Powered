@@ -16,6 +16,9 @@ import { useState } from 'react'
 import { ThemeProvider } from "@/components/ui/theme-provider"
 import { dark, shadesOfPurple } from '@clerk/themes'
 import { useEffect } from 'react'
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/custom/app-sidebar"
+import { SidebarInset } from "@/components/ui/sidebar"
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -62,20 +65,26 @@ const router = createBrowserRouter([
 //wrapper component
 function Root() {
   const { theme, setTheme } = useContext(ThemeContext);
+  const [open, setOpen] = useState(false)
   useEffect(() => {
     console.log(theme);
     ;
   }, []);
   return (
     <CustomThemeProvider value={{ theme, setTheme }}>
-      <ClerkProvider
-        publishableKey={PUBLISHABLE_KEY}
-        signUpFallbackRedirectUrl='/'
-        signInFallbackRedirectUrl='/'
-        afterSignOutUrl="/"
-      >
-        <RouterProvider router={router} />
-      </ClerkProvider>
+      <SidebarProvider open={open} onOpenChange={setOpen}>
+        <AppSidebar />
+        <SidebarInset>
+          <ClerkProvider
+            publishableKey={PUBLISHABLE_KEY}
+            signUpFallbackRedirectUrl='/'
+            signInFallbackRedirectUrl='/'
+            afterSignOutUrl="/"
+          >
+            <RouterProvider router={router} />
+          </ClerkProvider>
+        </SidebarInset>
+      </SidebarProvider>
     </CustomThemeProvider>
   )
 }

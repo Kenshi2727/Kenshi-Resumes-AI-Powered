@@ -13,25 +13,33 @@ import {
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-
+import { SidebarTrigger } from "@/components/ui/sidebar"
+import { useSidebar } from "@/components/ui/sidebar"
 
 function Header({ state }) {
     const { user, isSignedIn, isLoaded } = useUser();
     const { theme, setTheme } = useContext(ThemeContext);
+    const { open, setOpen } = useSidebar();
 
     return (
         <div className={(theme === 'light') ? 'bg-gradient-to-r from-red-200 to-yellow-200 relative' : 'bg-[#000] relative'}>
             <div className={(theme === 'light') ? 'bg-[url("../../textures/subtle-zebra-3d.png")] p-3 px-5 flex justify-between items-center shadow-md' : 'p-3 px-5 flex justify-between items-center shadow-lg shadow-[rgba(0,191,255,0.8)]'}>
-                <HoverCard>
-                    <HoverCardTrigger>
-                        <Link to={'/'}>
-                            <img src={(theme === 'light') ? "../../../logo2.png" : "../../../logo.png"} alt="logo" width={180} height={100} />
-                        </Link>
-                    </HoverCardTrigger>
-                    <HoverCardContent>
-                        Kenshi resumes – created and maintained by Abhishek Mathur. Github: @kenshi2727
-                    </HoverCardContent>
-                </HoverCard>
+                <div className='flex justify-center items-center gap-4'>
+                    <SidebarTrigger className={(theme === 'light') ? 'text-primary bg-white border-primary' : 'hover:border-[rgba(0,191,255,0.8)]'} onClick={() => {
+                        console.log("Toggling sidebar:", !open);
+                        setOpen(!open);
+                    }} />
+                    <HoverCard>
+                        <HoverCardTrigger>
+                            <Link to={'/'}>
+                                <img src={(theme === 'light') ? "../../../logo2.png" : "../../../logo.png"} alt="logo" className="w-[120px] h-[30px] sm:w-[180px] sm:h-[38px]" />
+                            </Link>
+                        </HoverCardTrigger>
+                        <HoverCardContent>
+                            Kenshi resumes – created and maintained by Abhishek Mathur. Github: @kenshi2727
+                        </HoverCardContent>
+                    </HoverCard>
+                </div>
                 {
                     isSignedIn ?
                         <div className='flex gap-2 items-center'>
