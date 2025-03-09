@@ -22,6 +22,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { ThemeContext } from "@/context/ThemeContext"
+import { useContext } from "react"
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -146,6 +148,7 @@ const Sidebar = React.forwardRef((
   ref
 ) => {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+  const { theme } = useContext(ThemeContext);
 
   if (collapsible === "none") {
     return (
@@ -167,7 +170,7 @@ const Sidebar = React.forwardRef((
         <SheetContent
           data-sidebar="sidebar"
           data-mobile="true"
-          className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+          className={(theme === 'light') ? "w-[--sidebar-width] bg-gradient-to-r from-red-200 to-yellow-200 p-0 text-sidebar-foreground [&>button]:hidden" : "w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"}
           style={
             {
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE
@@ -217,7 +220,7 @@ const Sidebar = React.forwardRef((
         {...props}>
         <div
           data-sidebar="sidebar"
-          className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow">
+          className={(theme === 'light') ? "flex h-full w-full flex-col bg-gradient-to-r from-red-200 to-yellow-200 group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow" : "flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"}>
           {children}
         </div>
       </div>
@@ -508,7 +511,7 @@ const SidebarMenuAction = React.forwardRef(({ className, asChild = false, showOn
         "peer-data-[size=lg]/menu-button:top-2.5",
         "group-data-[collapsible=icon]:hidden",
         showOnHover &&
-          "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
+        "group-focus-within/menu-item:opacity-100 group-hover/menu-item:opacity-100 data-[state=open]:opacity-100 peer-data-[active=true]/menu-button:text-sidebar-accent-foreground md:opacity-0",
         className
       )}
       {...props} />)

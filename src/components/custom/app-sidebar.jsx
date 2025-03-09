@@ -31,35 +31,35 @@ const items = [
     {
         title: "Developers",
         description: "Team profiles",
-        url: "/developers",
+        url: "/",
         icon: Users,
         category: "content"
     },
     {
         title: "Documentation",
         description: "API & guides",
-        url: "/docs",
+        url: "/",
         icon: Book,
         category: "content"
     },
     {
         title: "Blog",
         description: "Latest articles",
-        url: "/blog",
+        url: "/",
         icon: Calendar,
         category: "content"
     },
     {
         title: "Search",
         description: "Find content",
-        url: "/search",
+        url: "/",
         icon: Search,
         category: "tools"
     },
     {
         title: "Settings",
         description: "Preferences",
-        url: "/settings",
+        url: "/",
         icon: Settings,
         category: "system"
     },
@@ -67,7 +67,7 @@ const items = [
 
 export function AppSidebar() {
     const { theme } = useContext(ThemeContext);
-    const [activeItem, setActiveItem] = useState("Home");
+    const [activeItem, setActiveItem] = useState("");
     const [hoveredItem, setHoveredItem] = useState(null);
 
     // Group items by category
@@ -81,20 +81,20 @@ export function AppSidebar() {
 
     // Determine text and background colors based on theme
     const isDark = theme === 'dark';
-    const textColor = isDark ? 'text-slate-200' : 'text-slate-800';
-    const accentColor = isDark ? 'text-cyan-400' : 'text-cyan-600';
+    const textColor = isDark ? 'text-slate-200' : 'text-[#747bff]';
+    const accentColor = isDark ? 'text-cyan-400' : 'text-[#747bff]';
     const bgHover = isDark ? 'bg-slate-800' : 'bg-slate-100';
     const bgActive = isDark ? 'bg-slate-700' : 'bg-slate-200';
 
     return (
-        <Sidebar variant="sidebar" collapsible="offcanvas" side="left" className={`${isDark ? 'bg-slate-900' : 'bg-white'} border-r transition-all duration-300 ease-in-out`}>
+        <Sidebar variant="sidebar" collapsible="offcanvas" side="left">
             <SidebarContent className="pt-4">
                 <div className="flex items-center justify-center mb-6 px-4">
                     <div className={`text-xl font-bold ${accentColor} flex items-center gap-2`}>
-                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white">
-                            O
+                        <div className={(isDark) ? "w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-white" : "w-8 h-8 rounded-lg bg-gradient-to-r from-violet-400 to-indigo-600 flex items-center justify-center text-white"}>
+                            K
                         </div>
-                        <span>Obsidian</span>
+                        <span>Kenshi Resumes</span>
                     </div>
                 </div>
 
@@ -129,7 +129,7 @@ export function AppSidebar() {
                                                 rel={item.external ? "noopener noreferrer" : ""}
                                             >
                                                 {activeItem === item.title && (
-                                                    <div className="absolute left-0 top-1/2 w-1 h-6 -translate-y-1/2 bg-cyan-400 rounded-r-full transition-all duration-300 ease-in-out" />
+                                                    <div className={(isDark) ? "absolute left-0 top-1/2 w-1 h-6 -translate-y-1/2 bg-cyan-400 rounded-r-full transition-all duration-300 ease-in-out" : "absolute left-0 top-1/2 w-1 h-6 -translate-y-1/2 bg-[#747bff] rounded-r-full transition-all duration-300 ease-in-out"} />
                                                 )}
                                                 <item.icon className={`w-5 h-5 flex-shrink-0 ${activeItem === item.title ? accentColor : textColor} transition-all duration-200`} />
                                                 <div className="flex flex-col w-full min-w-0">
@@ -138,18 +138,7 @@ export function AppSidebar() {
                                                         <span className="text-xs opacity-70 truncate block w-full">{item.description}</span>
                                                     )}
                                                 </div>
-                                                {item.badge && (
-                                                    <div className="ml-auto bg-cyan-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center flex-shrink-0">
-                                                        {item.badge}
-                                                    </div>
-                                                )}
-                                                {item.external && (
-                                                    <svg className="w-3 h-3 ml-auto opacity-60 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                                        <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
-                                                        <path d="M15 3h6v6" />
-                                                        <path d="M10 14L21 3" />
-                                                    </svg>
-                                                )}
+
                                             </a>
                                         </SidebarMenuButton>
                                     </SidebarMenuItem>
