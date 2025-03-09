@@ -87,7 +87,7 @@ export function AppSidebar() {
     const bgActive = isDark ? 'bg-slate-700' : 'bg-slate-200';
 
     return (
-        <Sidebar variant="sidebar" collapsible="offcanvas" side="left" className={`${isDark ? 'bg-slate-900' : 'bg-white'} border-r transition-all duration-300 ease-in-out min-w-64`}>
+        <Sidebar variant="sidebar" collapsible="offcanvas" side="left" className={`${isDark ? 'bg-slate-900' : 'bg-white'} border-r transition-all duration-300 ease-in-out`}>
             <SidebarContent className="pt-4">
                 <div className="flex items-center justify-center mb-6 px-4">
                     <div className={`text-xl font-bold ${accentColor} flex items-center gap-2`}>
