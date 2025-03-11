@@ -1,4 +1,4 @@
-import { Book, Calendar, Home, Layout, Search, Settings, Users } from "lucide-react"
+import { Book, Calendar, Home, Layout, Info, Settings, Users } from "lucide-react"
 import { ThemeContext } from "@/context/ThemeContext"
 import { useContext, useState } from "react"
 import {
@@ -50,11 +50,11 @@ const items = [
         category: "content"
     },
     {
-        title: "Search",
-        description: "Find content",
+        title: "About Us",
+        description: "Product information",
         url: "/",
-        icon: Search,
-        category: "tools"
+        icon: Info,
+        category: "Additional Information"
     },
     {
         title: "Settings",
