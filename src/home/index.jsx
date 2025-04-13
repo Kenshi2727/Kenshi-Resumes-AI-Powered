@@ -8,6 +8,7 @@ import { useContext } from 'react'
 import { ThemeContext } from '@/context/ThemeContext'
 import { CarouselSize } from '@/components/custom/CarouselSize'
 import { useEffect, useState } from 'react'
+import Footer from '@/components/custom/Footer'
 
 function Home() {
     const fullText = '"Leverage the potential of AI to set yourself apart from the competition."';
@@ -39,12 +40,20 @@ function Home() {
                         <div>
                             <h3 className={(theme === 'light') ? 'text-center font-medium text-xs sm:text-base' : 'text-center font-medium text-xs sm:text-base'}>{displayedText}</h3>
                         </div>
-                        <div className='flex justify-center'>
+                        <div className='flex justify-center gap-6'>
                             <Link to={isSignedIn ? '/dashboard' : '/auth/sign-in'}>
                                 <Button className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
                                     {isSignedIn ? 'Go to Dashboard' : 'Sign In / Sign Up'} {isSignedIn ? <BookMarked /> : <ListStart />}
                                 </Button>
                             </Link>
+
+                            {!isSignedIn &&
+                                (<Link to='/'>
+                                    <Button onClick={() => alert("Under development------->\ncomplete thhe remaining backend-encryption etc.\ntelegram bot feedback system and rating\nanalytics dashboard--download history,site visit and resume creation frequency charts\nresume automatic sharing on telegram\nreconfiguring ai prompts\nbuilding new footer\nseparate backend files for telegram and other new features add ons.\nats checking through pdf upload throught prompt engineering")} className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
+                                        Start your Trial ! <ListStart />
+                                    </Button>
+                                </Link>)
+                            }
                         </div>
 
                         <div className='my-5 flex justify-center items-center'>
@@ -53,6 +62,7 @@ function Home() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     )
 }

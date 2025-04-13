@@ -2,8 +2,8 @@ import axios from 'axios';
 const API_KEY = import.meta.env.VITE_STRAPI_API_KEY
 
 const axiosClient = axios.create({
-    //base url from strapi admin localhost
-    baseURL: import.meta.env.VITE_BASE_URL + '/api/',
+    //base url from strapi admin localhost(or localhost:3000 for custom node bacekend)
+    baseURL: import.meta.env.VITE_BASE_URL + '/api',
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${API_KEY}`
@@ -15,7 +15,9 @@ const axiosClient = axios.create({
 
 const CreateNewResume = (data) => axiosClient.post('/user-resumes', data)
 
-const GetUserResumes = (userEmail) => axiosClient.get('/user-resumes?filters[userEmail][$eq]=' + userEmail)//fetching resumes based on user email
+// const GetUserResumes = (userEmail) => axiosClient.get('/user-resumes?filters[userEmail][$eq]=' + userEmail)//fetching resumes based on user email
+const GetUserResumes = (userEmail) => axiosClient.get('/user-resumes?userEmail=' + userEmail)
+
 
 const UpdateResumeDetail = (id, data) => axiosClient.put(`/user-resumes/${id}`, data)
 

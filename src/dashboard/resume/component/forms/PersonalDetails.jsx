@@ -22,6 +22,14 @@ function PersonalDetails({ enabledNext }) {
         enabledNext(false);
     }, []);
 
+    //set data from resumeInfo when fetched
+    useEffect(() => {
+        if (resumeInfo) {
+            setFormData(resumeInfo);
+        }
+    }, [resumeInfo]);
+
+
     const handleInputChange = (e) => {
         // enabledNext(false);
         const { name, value } = e.target;
@@ -39,9 +47,10 @@ function PersonalDetails({ enabledNext }) {
         e.preventDefault();
         setLoading(true);
         const data = {
-            data: formData
+            data: formData,
+            section: "personalDetails"
         };
-        GlobalApi.UpdateResumeDetail(params?.resumeId, data).then(res => {
+        GlobalApi.UpdateResumeDetail(params?.documentId, data).then(res => {
             console.log(res);
             // enabledNext(true);
             setLoading(false);

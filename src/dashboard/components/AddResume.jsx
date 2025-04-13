@@ -33,7 +33,7 @@ function AddResume() {
             //data fields to be sent to the backend
             data: {
                 title: resumeTitle,
-                resumeId: uuid,
+                documentId: uuid,
                 userEmail: user?.primaryEmailAddress?.emailAddress,
                 userName: user?.fullName
             }
@@ -46,8 +46,8 @@ function AddResume() {
             if (res) {//if the response is successful
                 setLoading(false);
                 setOpenDialog(false);
-                // navigation('/dashboard/resume/' + uuid + '/edit');//navigate to the edit page of the resume
-                navigation('/dashboard/resume/' + res.data.data.documentId + '/edit');//navigate to the edit page of the resume
+                navigation('/dashboard/resume/' + uuid + '/edit');//navigate to the edit page of the resume
+                // navigation('/dashboard/resume/' + res.data.data.documentId + '/edit');//navigate to the edit page of the resume
             }
         }, (err) => {
             console.log(err);

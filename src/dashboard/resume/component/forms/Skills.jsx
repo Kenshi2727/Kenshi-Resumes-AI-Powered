@@ -17,7 +17,7 @@ import { ThemeContext } from '@/context/ThemeContext';
 
 
 function Skills({ enabledNext }) {
-    const { resumeId } = useParams();
+    const { documentId } = useParams();
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
     const [loading, setLoading] = useState(false);
     const { theme } = useContext(ThemeContext);
@@ -53,9 +53,10 @@ function Skills({ enabledNext }) {
         const data = {
             data: {
                 skills: skillsList.map(({ id, ...rest }) => rest)
-            }
+            },
+            section: "skills"
         }
-        GlobalApi.UpdateResumeDetail(resumeId, data).then(res => {
+        GlobalApi.UpdateResumeDetail(documentId, data).then(res => {
             console.log(res);
             setLoading(false);
             toast("Your details have been saved successfully");
@@ -85,13 +86,13 @@ function Skills({ enabledNext }) {
     }, [skillsList]);//every time skillsList changes, update the resumeInfo
 
     useEffect(() => {
-        if (resumeInfo === null || undefined) {
-            setSkillsList([{
-                name: '',
-                rating: 0
-            }])
-        }
-        else {
+        // if (resumeInfo === null || undefined) {
+        //     setSkillsList([{
+        //         name: '',
+        //         rating: 0
+        //     }])
+        // }
+        if (resumeInfo?.skills) {
             setSkillsList(resumeInfo?.skills);
         }
     }, []);

@@ -56,9 +56,10 @@ function Education({ enabledNext }) {
         const data = {
             data: {
                 education: educationalList.map(({ id, ...rest }) => rest)
-            }
+            },
+            section: "education"
         }
-        GlobalApi.UpdateResumeDetail(params?.resumeId, data).then(res => {
+        GlobalApi.UpdateResumeDetail(params?.documentId, data).then(res => {
             console.log(res);
             setLoading(false);
             toast("Your details have been saved successfully");
@@ -89,17 +90,17 @@ function Education({ enabledNext }) {
     }, [educationalList])
 
     useEffect(() => {
-        if (resumeInfo === null || undefined) {
-            setEducationalList([{
-                university: '',
-                degree: '',
-                major: '',
-                startDate: '',
-                endDate: '',
-                description: ''
-            }])
-        }
-        else {
+        // if (resumeInfo === null || undefined) {
+        //     setEducationalList([{
+        //         university: '',
+        //         degree: '',
+        //         major: '',
+        //         startDate: '',
+        //         endDate: '',
+        //         description: ''
+        //     }])
+        // }
+        if (resumeInfo?.education) {
             setEducationalList(resumeInfo?.education);
         }
     }, []);

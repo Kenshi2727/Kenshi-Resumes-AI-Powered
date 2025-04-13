@@ -45,6 +45,7 @@ function ResumeCardItem({ resume, refreshData }) {
             });
             sound.play();
             refreshData();//calls getResumeList() to fetch latest data
+            window.location.reload();//refreshes the page forcefully because refreshData() is not working properly
             setOpenAlert(false);
             setLoading(false);
         });

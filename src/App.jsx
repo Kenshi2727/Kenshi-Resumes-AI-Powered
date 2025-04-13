@@ -4,6 +4,7 @@ import { Navigate, Outlet } from 'react-router'
 import { useUser } from '@clerk/clerk-react'
 import Header from './components/custom/Header'
 import { Toaster } from "@/components/ui/sonner"
+import Footer from './components/custom/Footer'
 
 function App() {
   const [theme, setTheme] = useState('light');
@@ -21,6 +22,7 @@ function App() {
       {/* this is where the home component will be rendered */}
       <Outlet />
       <Toaster />
+      <Footer />
     </div>
   );
 }

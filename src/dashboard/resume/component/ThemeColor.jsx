@@ -16,7 +16,7 @@ import { ThemeContext } from '@/context/ThemeContext'
 function ThemeColor() {
     const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
     const [selectedColor, setSelectedColor] = useState();
-    const { resumeId } = useParams();
+    const { documentId } = useParams();
     const { theme } = useContext(ThemeContext);
     const onColorSelect = (color) => {
         setSelectedColor(color);
@@ -30,7 +30,7 @@ function ThemeColor() {
                 themeColor: color
             }
         }
-        GlobalApi.UpdateResumeDetail(resumeId, data).then(res => {
+        GlobalApi.UpdateResumeDetail(documentId, data).then(res => {
             console.log(res);
             toast("Theme Color Updated🎨🖌️");
             var sound = new Howl({

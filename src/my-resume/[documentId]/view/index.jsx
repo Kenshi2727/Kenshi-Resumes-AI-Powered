@@ -15,7 +15,7 @@ import { ThemeContext } from '@/context/ThemeContext';
 function ViewResume() {
     const [resumeInfo, setResumeInfo] = useState();
     const [downloading, setDownloading] = useState(false);
-    const { resumeId } = useParams();
+    const { documentId } = useParams();
     const { theme } = useContext(ThemeContext);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ function ViewResume() {
     }, []);
 
     const GetResumeInfo = () => {
-        GlobalApi.GetUserResumeById(resumeId).then(res => {
+        GlobalApi.GetUserResumeById(documentId).then(res => {
             console.log(res.data.data);
             setResumeInfo(res.data.data);
         })

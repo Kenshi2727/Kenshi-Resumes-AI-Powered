@@ -36,7 +36,11 @@ function Summary({ enabledNext }) {
         setLoading(false);
     }
 
-    useEffect(() => enabledNext(false), []);
+    useEffect(() => {
+        enabledNext(false);
+        if (resumeInfo === null || undefined) setSummery("");
+        else (resumeInfo.summery !== null) && setSummery(resumeInfo?.summery);
+    }, []);
 
     useEffect(() => {
         summery && setResumeInfo({
@@ -51,9 +55,10 @@ function Summary({ enabledNext }) {
         const data = {
             data: {
                 summery: summery
-            }
+            },
+            section: "summery"
         }
-        GlobalApi.UpdateResumeDetail(params?.resumeId, data).then(res => {
+        GlobalApi.UpdateResumeDetail(params?.documentId, data).then(res => {
             console.log(res);
             setLoading(false);
             toast("Your details have been saved successfully");

@@ -11,18 +11,18 @@ import { ThemeContext } from '@/context/ThemeContext';
 function EditResume() {
     const params = useParams();//useParams is a hook that allows you to access the URL parameters from a current route in react-router
     const [resumeInfo, setResumeInfo] = useState();
-    const { resumeId } = useParams();
+    const { documentId } = useParams();
     const { theme } = useContext(ThemeContext);
 
     useEffect(
         () => {
-            console.log(params.resumeId);
+            console.log(params.documentId);
             // setResumeInfo(dummy);//set the resumeInfo to the dummy data
             GetResumeInfo();
         }, []);//[] so that it will be looaded on every render
 
     const GetResumeInfo = () => {
-        GlobalApi.GetUserResumeById(resumeId).then(res => {
+        GlobalApi.GetUserResumeById(documentId).then(res => {
             console.log(res.data.data);
             setResumeInfo(res.data.data);
         })

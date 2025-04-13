@@ -35,13 +35,13 @@ const items = [
         icon: Users,
         category: "content"
     },
-    {
-        title: "Documentation",
-        description: "API & guides",
-        url: "/",
-        icon: Book,
-        category: "content"
-    },
+    // {
+    //     title: "Documentation",
+    //     description: "API & guides",
+    //     url: "/",
+    //     icon: Book,
+    //     category: "content"
+    // },
     {
         title: "Blog",
         description: "Latest articles",
@@ -57,11 +57,18 @@ const items = [
         category: "Additional Information"
     },
     {
-        title: "Settings",
-        description: "Preferences",
+        title: "Developer Login",
+        description: "Access for developers only",
+        url: "/",
+        icon: Info,
+        category: "Additional Information"
+    },
+    {
+        title: "Feedback",
+        description: "Share your thoughts",
         url: "/",
         icon: Settings,
-        category: "system"
+        category: "User Support"
     },
 ]
 
@@ -118,9 +125,18 @@ export function AppSidebar() {
                                                 px-3 py-2 my-1
                                                 w-full
                                             `}
-                                            onClick={() => setActiveItem(item.title)}
-                                            onMouseEnter={() => setHoveredItem(item.title)}
-                                            onMouseLeave={() => setHoveredItem(null)}
+                                            onClick={() => {
+                                                setActiveItem(item.title)
+                                                alert("New features coming soon!")
+                                            }}
+                                            onMouseEnter={() => {
+                                                setHoveredItem(item.title)
+                                                setActiveItem(item.title)
+                                            }}
+                                            onMouseLeave={() => {
+                                                setHoveredItem(null)
+                                                setActiveItem("")
+                                            }}
                                         >
                                             <a
                                                 href={item.url}
@@ -148,11 +164,11 @@ export function AppSidebar() {
                     </SidebarGroup>
                 ))}
 
-                <div className="absolute bottom-0 left-0 right-0 p-4">
+                <div className="absolute bottom-0 left-0 right-0 p-4 mb-2">
                     <div className={`rounded-lg ${isDark ? 'bg-slate-800' : 'bg-slate-100'} p-3 text-sm transition-all duration-300`}>
                         <p className={`${textColor} font-medium text-xs`}>Pro Tip</p>
                         <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} text-xs mt-1`}>
-                            Press <kbd className="px-1 py-0.5 rounded bg-slate-700 text-slate-200 text-xs mx-1">⌘ K</kbd> to search
+                            Tailor your resume to match each job description — keywords matter.
                         </p>
                     </div>
                 </div>

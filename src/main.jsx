@@ -8,8 +8,8 @@ import SignUpPage from './auth/sign-up'
 import Home from './home'
 import Dashboard from './dashboard'
 import { ClerkProvider } from '@clerk/clerk-react'
-import EditResume from './dashboard/resume/[resumeId]/edit'
-import ViewResume from './my-resume/[resume-id]/view'
+import EditResume from './dashboard/resume/[documentId]/edit'
+import ViewResume from './my-resume/[documentId]/view'
 import { ThemeContext } from './context/ThemeContext'
 import { CustomThemeProvider } from './context/ThemeContext'
 import { useState } from 'react'
@@ -43,7 +43,7 @@ const router = createBrowserRouter([
         element: <Dashboard />
       },
       {
-        path: '/dashboard/resume/:resumeId/edit',//dyanmic route
+        path: '/dashboard/resume/:documentId/edit',//dyanmic route
         element: <EditResume />
       }
     ]
@@ -57,7 +57,7 @@ const router = createBrowserRouter([
     element: <SignUpPage />,
   },
   {
-    path: 'my-resume/:resumeId/view',
+    path: 'my-resume/:documentId/view',
     element: <ViewResume />
   }
 ])

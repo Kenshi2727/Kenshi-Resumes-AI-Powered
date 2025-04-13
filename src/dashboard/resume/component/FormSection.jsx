@@ -15,7 +15,7 @@ import { ThemeContext } from '@/context/ThemeContext';
 function FormSection() {
     const [activeFormIndex, setActiveFormIndex] = useState(1);
     const [enableNext, setEnableNext] = useState(false);
-    const { resumeId } = useParams();
+    const { documentId } = useParams();
     const { theme } = useContext(ThemeContext);
     return (
         <div>
@@ -60,7 +60,7 @@ function FormSection() {
                                 : activeFormIndex == 5 ?
                                     <Skills enabledNext={(v) => setEnableNext(v)} />
                                     : activeFormIndex == 6 ?
-                                        <Navigate to={'/my-resume/' + resumeId + '/view'} />
+                                        <Navigate to={'/my-resume/' + documentId + '/view'} />
                                         : null}
         </div>
     )

@@ -46,12 +46,15 @@ function Experience({ enabledNext }) {
         setExperienceList(newEntries);
     }
 
-    useEffect(() => enabledNext(false), []);
-
     useEffect(() => {
-        if (resumeInfo === null || undefined) setExperienceList([formField]);
-        else (resumeInfo) && setExperienceList(resumeInfo?.Experience)
+        enabledNext(false);
+        if (resumeInfo?.Experience) setExperienceList(resumeInfo?.Experience)
     }, []);
+
+    // useEffect(() => {
+    //     if (resumeInfo === null || undefined) setExperienceList([formField]);
+    //     else (resumeInfo.Experience !== null) && setExperienceList(resumeInfo?.Experience)
+    // }, []);
 
     useEffect(() => {
         console.log(experienceList);
@@ -95,12 +98,13 @@ function Experience({ enabledNext }) {
         const data = {
             data: {
                 Experience: experienceList.map(({ id, ...rest }) => rest)
-            }
+            },
+            section: 'experience'
         }
 
         console.log(experienceList)
 
-        GlobalApi.UpdateResumeDetail(params?.resumeId, data).then(res => {
+        GlobalApi.UpdateResumeDetail(params?.documentId, data).then(res => {
             console.log(res);
             setLoading(false);
             toast('Details updated !')
