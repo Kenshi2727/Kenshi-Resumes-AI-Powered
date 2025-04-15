@@ -36,13 +36,7 @@ function Footer() {
         >
             <div className="max-w-7xl mx-auto px-5 py-8">
                 {/* Upper Section: Branding & Navigation */}
-                <div
-                    className={
-                        theme === 'light'
-                            ? 'bg-[url("../../textures/food.png")] p-5 flex flex-col md:flex-row justify-between items-center'
-                            : 'p-5 flex flex-col md:flex-row justify-between items-center'
-                    }
-                >
+                <div className='p-5 flex flex-col md:flex-row justify-between items-center'>
                     {/* Branding */}
                     <div className="flex flex-col items-center md:items-start">
                         <h2 className="text-2xl font-bold">Kenshi Resumes, Inc</h2>
@@ -52,27 +46,27 @@ function Footer() {
                     <nav className="mt-4 md:mt-0">
                         <ul className="flex gap-6">
                             <li>
-                                <a href="#about" className="text-sm hover:underline">
+                                <a href="#about" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     About
                                 </a>
                             </li>
                             <li>
-                                <a href="#services" className="text-sm hover:underline">
+                                <a href="#services" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Services
                                 </a>
                             </li>
                             <li>
-                                <a href="#pricing" className="text-sm hover:underline">
-                                    Pricing
+                                <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
+                                    Source
                                 </a>
                             </li>
                             <li>
-                                <a href="#contact" className="text-sm hover:underline">
+                                <a href="#contact" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Contact
                                 </a>
                             </li>
                             <li>
-                                <a href="#blog" className="text-sm hover:underline">
+                                <a href="#blog" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Blog
                                 </a>
                             </li>
@@ -85,16 +79,16 @@ function Footer() {
                 <div className="flex flex-col md:flex-row justify-between items-center">
                     {/* Social Media Icons */}
                     <div className="flex gap-6 mb-4 md:mb-0">
-                        <a href="https://facebook.com" aria-label="Facebook" className="hover:text-blue-600">
+                        <a href="https://facebook.com" aria-label="Facebook" className={(theme === 'light') ? "hover:text-blue-600" : "hover:text-blue-600 text-[rgba(0,191,255,0.8)]"}>
                             <FaFacebookF size={20} />
                         </a>
-                        <a href="https://twitter.com" aria-label="Twitter" className="hover:text-blue-400">
+                        <a href="https://twitter.com" aria-label="Twitter" className={(theme === 'light') ? "hover:text-blue-400" : "hover:text-blue-400 text-[rgba(0,191,255,0.8)]"}>
                             <FaTwitter size={20} />
                         </a>
-                        <a href="https://instagram.com" aria-label="Instagram" className="hover:text-pink-600">
+                        <a href="https://instagram.com" aria-label="Instagram" className={(theme === 'light') ? "hover:text-pink-600" : "hover:text-pink-600 text-[rgba(0,191,255,0.8)]"}>
                             <FaInstagram size={20} />
                         </a>
-                        <a href="https://linkedin.com" aria-label="LinkedIn" className="hover:text-blue-700">
+                        <a href="https://linkedin.com" aria-label="LinkedIn" className={(theme === 'light') ? "hover:text-blue-700" : "hover:text-blue-700 text-[rgba(0,191,255,0.8)]"}>
                             <FaLinkedinIn size={20} />
                         </a>
                     </div>
