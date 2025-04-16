@@ -25,10 +25,22 @@ const GetUserResumeById = (id) => axiosClient.get('/user-resumes/' + id + "?popu
 
 const DeleteResumeById = (id) => axiosClient.delete('/user-resumes/' + id)
 
+const UploadResumeById = (id, formData) => axiosClient.post(
+    `/user-resumes/upload/${id}`,
+    formData,
+    {
+        headers: {
+            'Content-Type': undefined // Let the browser set it
+        }
+    }
+);
+
+
 export default {
     CreateNewResume,
     GetUserResumes,
     UpdateResumeDetail,
     GetUserResumeById,
-    DeleteResumeById
+    DeleteResumeById,
+    UploadResumeById
 }

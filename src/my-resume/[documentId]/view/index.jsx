@@ -8,7 +8,7 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { RWebShare } from "react-web-share";
 import html2pdf from 'html2pdf.js';
 import Footer from '@/components/custom/Footer';
-import { Download } from 'lucide-react';
+import { Download, Upload } from 'lucide-react';
 import { useContext } from 'react';
 import { ThemeContext } from '@/context/ThemeContext';
 
@@ -33,7 +33,7 @@ function ViewResume() {
     //     window.print();
     // }
 
-    const HandleDownload = () => {
+    const HandleDownload = async () => {
         if (!resumeInfo || downloading) return; // Ensure resumeInfo is available and no download in progress
         setDownloading(true);
         let element = document.getElementById('print-area');
@@ -45,11 +45,20 @@ function ViewResume() {
             jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
         };
 
+        //uploding resume
+        let pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
+        let formData = new FormData();
+        formData.append('files', pdfBlob, resumeInfo?.firstName + " " + resumeInfo?.lastName + "'s resume.pdf");
+        GlobalApi.UploadResumeById(documentId, formData).then(res => {
+            console.log("Resume uploaded successfully", res);
+        }).catch(err => {
+            console.log("Error uploading pdf", err);
+        });
+
         // New Promise-based usage:
         html2pdf().from(element).set(opt).save().finally(() => {
             setDownloading(false); // Reset flag when download is finished or canceled
         });;
-
         // Old monolithic-style usage:
         // html2pdf(element, opt);
     }
