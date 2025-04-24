@@ -11,6 +11,9 @@ import Footer from '@/components/custom/Footer';
 import { Download, Upload } from 'lucide-react';
 import { useContext } from 'react';
 import { ThemeContext } from '@/context/ThemeContext';
+import { FaTelegram } from 'react-icons/fa';
+import { FiShare2 } from 'react-icons/fi';
+import { BsSpeedometer2 } from 'react-icons/bs';
 
 function ViewResume() {
     const [resumeInfo, setResumeInfo] = useState();
@@ -72,8 +75,10 @@ function ViewResume() {
                         <div className='my-10 mx-10 md:mx-20 lg:mx-36'>
                             <h2 className='text-center text-2xl font-medium'>🚀 Your career journey starts now! Here's your polished resume—go land that dream job! 🎯</h2>
                             <p className={(theme === 'light') ? 'text-center text-gray-600' : 'text-center text-white'}>You can download your resume and share it with your connections!</p>
-                            <div className='w-100 flex flex-col items-center sm:flex-row sm:justify-between gap-2 sm:gap-0 sm:px-44 my-10'>
-                                <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''} onClick={HandleDownload}>Download<Download /></Button>
+                            <div className='w-100 grid grid-cols-2 sm:grid-cols-4 gap-10 my-10'>
+                                <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''} onClick={HandleDownload}>Download <Download /></Button>
+                                <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>ATS Score <BsSpeedometer2 /></Button>
+                                <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Get on Telegram <FaTelegram /></Button>
                                 <RWebShare
                                     data={{
                                         text: "Hey guys!This is my resume,have a look please...",
@@ -83,7 +88,7 @@ function ViewResume() {
                                     }}
                                     onClick={() => console.log("shared successfully!")}
                                 >
-                                    <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Share 🔗</Button>
+                                    <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Share <FiShare2 /></Button>
                                 </RWebShare>
                             </div>
                         </div>
