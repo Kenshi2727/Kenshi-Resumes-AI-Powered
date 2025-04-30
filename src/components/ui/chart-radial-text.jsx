@@ -19,27 +19,45 @@ import {
     CardTitle,
 } from "@/components/ui/card";
 import { ChartContainer } from "@/components/ui/chart";
+import { useContext } from "react";
+import { ThemeContext } from "@/context/ThemeContext";
 
 // Score between 0-100
 const atsScore = 77;
 
-const chartData = [
-    { name: "score", value: atsScore, fill: "var(--color-score)" },
-];
+// const chartData = [
+//     { name: "score", value: atsScore, fill: "var(--color-score)" },
+// ];
 
-const chartConfig = {
-    value: {
-        label: "ATS Score",
-    },
-    score: {
-        label: "Score",
-        color: "hsl(270, 100%, 60%)",
-    },
-};
+// const chartConfig = {
+//     value: {
+//         label: "ATS Score",
+//     },
+//     score: {
+//         label: "Score",
+//         color: "hsl(270, 100%, 60%)",
+//     },
+// };
 
 export default function Component() {
+    const { theme } = useContext(ThemeContext);
+
+    const chartData = [
+        { name: "score", value: atsScore, fill: "var(--color-score)" },
+    ];
+
+    const chartConfig = {
+        value: {
+            label: "ATS Score",
+        },
+        score: {
+            label: "Score",
+            color: (theme === 'light') ? "hsl(270, 100%, 60%)" : "rgba(0,191,255,0.8)",
+        },
+    };
+
     return (
-        <Card className="flex flex-col">
+        <Card className={(theme === 'light') ? "flex flex-col" : "flex flex-col border-white border-2"}>
             <CardHeader className="items-center pb-0">
                 <CardTitle>ATS Score</CardTitle>
                 <CardDescription>January - June 2024</CardDescription>
