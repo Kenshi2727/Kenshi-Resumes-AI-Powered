@@ -19,7 +19,7 @@ import { useEffect } from 'react'
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/custom/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
-import ATS_Score from './ats_score'
+import ATS_Score from './ats_score/[documentId]'
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -48,7 +48,7 @@ const router = createBrowserRouter([
         element: <EditResume />
       },
       {
-        path: '/dashboard/:documentId/ats_score',
+        path: '/ats_score/:documentId',
         element: <ATS_Score />
       }
     ]
