@@ -14,6 +14,7 @@ import { ThemeContext } from '@/context/ThemeContext';
 import { FaTelegram } from 'react-icons/fa';
 import { FiShare2 } from 'react-icons/fi';
 import { BsSpeedometer2 } from 'react-icons/bs';
+import { Link } from 'react-router';
 
 function ViewResume() {
     const [resumeInfo, setResumeInfo] = useState();
@@ -77,7 +78,9 @@ function ViewResume() {
                             <p className={(theme === 'light') ? 'text-center text-gray-600' : 'text-center text-white'}>You can download your resume and share it with your connections!</p>
                             <div className='w-100 grid grid-cols-2 sm:grid-cols-4 gap-10 my-10'>
                                 <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''} onClick={HandleDownload}>Download <Download /></Button>
-                                <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>ATS Score <BsSpeedometer2 /></Button>
+                                <Link to={'/ats_score/' + documentId}>
+                                    <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)] w-full' : 'w-full'}>ATS Score <BsSpeedometer2 /></Button>
+                                </Link>
                                 <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Get on Telegram <FaTelegram /></Button>
                                 <RWebShare
                                     data={{

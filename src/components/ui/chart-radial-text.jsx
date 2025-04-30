@@ -60,7 +60,7 @@ export default function Component() {
         <Card className={(theme === 'light') ? "flex flex-col" : "flex flex-col border-white border-2"}>
             <CardHeader className="items-center pb-0">
                 <CardTitle>ATS Score</CardTitle>
-                <CardDescription>January - June 2024</CardDescription>
+                <CardDescription>Gemini Pro 2.5!</CardDescription>
             </CardHeader>
             <CardContent className="flex-1 pb-0">
                 <ChartContainer
