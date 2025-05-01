@@ -19,6 +19,7 @@ import { Link } from 'react-router';
 function ViewResume() {
     const [resumeInfo, setResumeInfo] = useState();
     const [downloading, setDownloading] = useState(false);
+    const [uploading, setUploading] = useState(false);
     const { documentId } = useParams();
     const { theme } = useContext(ThemeContext);
 
@@ -37,9 +38,31 @@ function ViewResume() {
     //     window.print();
     // }
 
-    const HandleDownload = async () => {
+    const HandleDownload = () => {
         if (!resumeInfo || downloading) return; // Ensure resumeInfo is available and no download in progress
         setDownloading(true);
+        let element = document.getElementById('print-area');
+        let opt = {
+            margin: 0,
+            filename: resumeInfo?.firstName + " " + resumeInfo?.lastName + "'s resume.pdf",
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 3 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+
+        // New Promise-based usage:
+        html2pdf().from(element).set(opt).save().finally(() => {
+            setDownloading(false); // Reset flag when download is finished or canceled
+        });;
+        // Old monolithic-style usage:
+        // html2pdf(element, opt);
+    }
+
+    const handleUpload = async () => {
+        if (!resumeInfo || uploading) return; // Ensure resumeInfo is available and no download in progress
+        setUploading(true);
+        // Creating a new FormData object to hold the file data
         let element = document.getElementById('print-area');
         let opt = {
             margin: 0,
@@ -58,13 +81,7 @@ function ViewResume() {
         }).catch(err => {
             console.log("Error uploading pdf", err);
         });
-
-        // New Promise-based usage:
-        html2pdf().from(element).set(opt).save().finally(() => {
-            setDownloading(false); // Reset flag when download is finished or canceled
-        });;
-        // Old monolithic-style usage:
-        // html2pdf(element, opt);
+        setUploading(false);
     }
 
     return (
@@ -81,7 +98,7 @@ function ViewResume() {
                                 <Link to={'/ats_score/' + documentId}>
                                     <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)] w-full' : 'w-full'}>ATS Score <BsSpeedometer2 /></Button>
                                 </Link>
-                                <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Get on Telegram <FaTelegram /></Button>
+                                <Button onClick={handleUpload} className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Get on Telegram <FaTelegram /></Button>
                                 <RWebShare
                                     data={{
                                         text: "Hey guys!This is my resume,have a look please...",
