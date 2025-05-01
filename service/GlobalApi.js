@@ -25,8 +25,8 @@ const GetUserResumeById = (id) => axiosClient.get('/user-resumes/' + id + "?popu
 
 const DeleteResumeById = (id) => axiosClient.delete('/user-resumes/' + id)
 
-const UploadResumeById = (id, formData) => axiosClient.post(
-    `/user-resumes/upload/${id}`,
+const UploadResumeById = (id, formData, teleUser) => axiosClient.post(
+    `/user-resumes/upload/${id}/${teleUser}`,
     formData,
     {
         headers: {

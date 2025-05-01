@@ -3,6 +3,7 @@ import {
     HarmCategory,
     HarmBlockThreshold,
 } from "@google/generative-ai";
+// import * as fs from 'fs';
 
 const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -28,6 +29,24 @@ export const chatSession = model.startChat({
     history: [
     ],
 });
+
+export const pdfPrompt = async (pdfBuffer) => {
+    const contents = [
+        { text: "Summarize this document" },
+        {
+            inlineData: {
+                mimeType: 'application/pdf',
+                data: pdfBuffer
+            }
+        }
+    ];
+
+    const response = await ai.models.generateContent({
+        model: "gemini-2.0-flash",
+        contents: contents
+    });
+    console.log(response.text);
+}
 
 //     const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
 //     console.log(result.response.text());

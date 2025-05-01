@@ -8,18 +8,30 @@ import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 import { RWebShare } from "react-web-share";
 import html2pdf from 'html2pdf.js';
 import Footer from '@/components/custom/Footer';
-import { Download, Upload } from 'lucide-react';
+import { Download, LoaderCircle, Upload } from 'lucide-react';
 import { useContext } from 'react';
 import { ThemeContext } from '@/context/ThemeContext';
 import { FaTelegram } from 'react-icons/fa';
 import { FiShare2 } from 'react-icons/fi';
 import { BsSpeedometer2 } from 'react-icons/bs';
 import { Link } from 'react-router';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input"
 
 function ViewResume() {
     const [resumeInfo, setResumeInfo] = useState();
     const [downloading, setDownloading] = useState(false);
     const [uploading, setUploading] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [telegramUserName, setTelegramUserName] = useState('');
     const { documentId } = useParams();
     const { theme } = useContext(ThemeContext);
 
@@ -60,6 +72,7 @@ function ViewResume() {
     }
 
     const handleUpload = async () => {
+        setDialogOpen(true);
         if (!resumeInfo || uploading) return; // Ensure resumeInfo is available and no download in progress
         setUploading(true);
         // Creating a new FormData object to hold the file data
@@ -76,7 +89,7 @@ function ViewResume() {
         let pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
         let formData = new FormData();
         formData.append('files', pdfBlob, resumeInfo?.firstName + " " + resumeInfo?.lastName + "'s resume.pdf");
-        GlobalApi.UploadResumeById(documentId, formData).then(res => {
+        GlobalApi.UploadResumeById(documentId, formData, telegramUserName).then(res => {
             console.log("Resume uploaded successfully", res);
         }).catch(err => {
             console.log("Error uploading pdf", err);
@@ -98,7 +111,40 @@ function ViewResume() {
                                 <Link to={'/ats_score/' + documentId}>
                                     <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)] w-full' : 'w-full'}>ATS Score <BsSpeedometer2 /></Button>
                                 </Link>
-                                <Button onClick={handleUpload} className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''}>Get on Telegram <FaTelegram /></Button>
+
+
+                                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+                                    <DialogTrigger asChild>
+                                        <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)] w-full' : 'w-full'}>Get on Telegram <FaTelegram /></Button>
+                                    </DialogTrigger>
+                                    <DialogContent className="sm:max-w-[425px]">
+                                        <DialogHeader>
+                                            <DialogTitle>Edit profile</DialogTitle>
+                                            <DialogDescription>
+                                                Please provide your telegram user name for us to send your resume.
+                                            </DialogDescription>
+                                        </DialogHeader>
+                                        <div className="grid gap-4 py-4">
+                                            <div className="grid grid-cols-4 items-center gap-4">
+                                                <Input id="name" placeholder="Enter your telegram user name" onChange={(e) => setTelegramUserName(e.target.value)} className="col-span-4" />
+                                            </div>
+                                        </div>
+                                        <DialogFooter>
+                                            <div className="flex justify-between w-full">
+                                                <Button className="bg-black hover:bg-slate-800" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                                                {/* <Link to='https://t.me/resume2727bot'> */}
+                                                <Button type="submit" onClick={async () => {
+                                                    await handleUpload();
+                                                    window.location.href = 'https://t.me/resume2727bot';
+                                                }}>{(uploading) ? <LoaderCircle className='animate-spin' /> : 'Continue'}</Button>
+                                                {/* </Link> */}
+                                            </div>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
+
+
+
                                 <RWebShare
                                     data={{
                                         text: "Hey guys!This is my resume,have a look please...",
