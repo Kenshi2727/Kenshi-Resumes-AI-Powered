@@ -35,6 +35,16 @@ const UploadResumeById = (id, formData, teleUser) => axiosClient.post(
     }
 );
 
+const UploadResumeForAts = (id, formData) => axiosClient.post(`/user-resumes/ats/${id}`, formData,
+    {
+        headers: {
+            'Content-Type': undefined // Let the browser set it
+        }
+    })
+
+const GetAtsScore = (id) => axiosClient.get(`/user-resumes/fetchScore/${id}`)
+
+const GetAtsRecommendations = (id) => axiosClient.get(`/user-resumes/fetchRecommendations/${id}`)
 
 export default {
     CreateNewResume,
@@ -42,5 +52,8 @@ export default {
     UpdateResumeDetail,
     GetUserResumeById,
     DeleteResumeById,
-    UploadResumeById
+    UploadResumeById,
+    UploadResumeForAts,
+    GetAtsScore,
+    GetAtsRecommendations
 }

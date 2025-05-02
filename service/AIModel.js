@@ -30,23 +30,6 @@ export const chatSession = model.startChat({
     ],
 });
 
-export const pdfPrompt = async (pdfBuffer) => {
-    const contents = [
-        { text: "Summarize this document" },
-        {
-            inlineData: {
-                mimeType: 'application/pdf',
-                data: pdfBuffer
-            }
-        }
-    ];
-
-    const response = await ai.models.generateContent({
-        model: "gemini-2.0-flash",
-        contents: contents
-    });
-    console.log(response.text);
-}
 
 //     const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
 //     console.log(result.response.text());

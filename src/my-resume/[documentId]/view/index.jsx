@@ -97,6 +97,32 @@ function ViewResume() {
         setUploading(false);
     }
 
+    const handleAts = async () => {
+        setDialogOpen(true);
+        if (!resumeInfo || uploading) return; // Ensure resumeInfo is available and no download in progress
+        setUploading(true);
+        // Creating a new FormData object to hold the file data
+        let element = document.getElementById('print-area');
+        let opt = {
+            margin: 0,
+            filename: resumeInfo?.firstName + " " + resumeInfo?.lastName + "'s resume.pdf",
+            image: { type: 'jpeg', quality: 1 },
+            html2canvas: { scale: 3 },
+            jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        //uploding resume
+        let pdfBlob = await html2pdf().from(element).set(opt).outputPdf('blob');
+        let formData = new FormData();
+        formData.append('files', pdfBlob, resumeInfo?.firstName + " " + resumeInfo?.lastName + "'s resume.pdf");
+        GlobalApi.UploadResumeForAts(documentId, formData).then(res => {
+            console.log("Resume uploaded successfully for ATS", res);
+        }).catch(err => {
+            console.log("Error uploading pdf for ATS", err);
+        });
+        setUploading(false);
+    }
+
     return (
         <div className={(theme === 'light') ? 'bg-gradient-to-r from-red-200 to-yellow-200' : ''}>
             <div className={(theme === 'light') ? 'h-screen bg-[url("../../textures/food.png")] overflow-y-scroll' : 'h-screen bg-[url("../../textures/cubes.png")] overflow-y-scroll'}>
@@ -109,7 +135,7 @@ function ViewResume() {
                             <div className='w-100 grid grid-cols-2 sm:grid-cols-4 gap-10 my-10'>
                                 <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)]' : ''} onClick={HandleDownload}>Download <Download /></Button>
                                 <Link to={'/ats_score/' + documentId}>
-                                    <Button className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)] w-full' : 'w-full'}>ATS Score <BsSpeedometer2 /></Button>
+                                    <Button onClick={handleAts} className={(theme === 'dark') ? 'bg-white hover:bg-[rgba(0,191,255,0.8)] w-full' : 'w-full'}>ATS Score <BsSpeedometer2 /></Button>
                                 </Link>
 
 

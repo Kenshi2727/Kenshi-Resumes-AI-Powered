@@ -2,7 +2,6 @@ import React from 'react'
 import Component from "@/components/ui/chart-radial-text"
 import { ThemeContext } from '@/context/ThemeContext'
 import { useContext } from 'react'
-import { pdfPrompt } from '../../../service/AIModel'
 
 function Score() {
     const { theme } = useContext(ThemeContext);

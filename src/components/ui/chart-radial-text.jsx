@@ -21,9 +21,7 @@ import {
 import { ChartContainer } from "@/components/ui/chart";
 import { useContext } from "react";
 import { ThemeContext } from "@/context/ThemeContext";
-
-// Score between 0-100
-const atsScore = 77;
+import { ScoreContext } from "@/context/ScoreContext";
 
 // const chartData = [
 //     { name: "score", value: atsScore, fill: "var(--color-score)" },
@@ -41,7 +39,11 @@ const atsScore = 77;
 
 export default function Component() {
     const { theme } = useContext(ThemeContext);
+    const { score } = useContext(ScoreContext)
+    console.log("graphing--->", score);
 
+    // Score between 0-100
+    const atsScore = score;
     const chartData = [
         { name: "score", value: atsScore, fill: "var(--color-score)" },
     ];
