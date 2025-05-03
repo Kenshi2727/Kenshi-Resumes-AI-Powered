@@ -3,6 +3,7 @@ import {
     HarmCategory,
     HarmBlockThreshold,
 } from "@google/generative-ai";
+// import * as fs from 'fs';
 
 const apiKey = import.meta.env.VITE_GOOGLE_AI_API_KEY;
 const genAI = new GoogleGenerativeAI(apiKey);
@@ -28,6 +29,7 @@ export const chatSession = model.startChat({
     history: [
     ],
 });
+
 
 //     const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
 //     console.log(result.response.text());

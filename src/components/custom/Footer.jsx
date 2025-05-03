@@ -40,7 +40,7 @@ function Footer() {
                     {/* Branding */}
                     <div className="flex flex-col items-center md:items-start">
                         <h2 className="text-2xl font-bold">Kenshi Resumes, Inc</h2>
-                        <p className="text-sm mt-1">Crafting professional resumes with passion.</p>
+                        <p className="text-xs sm:text-sm mt-1">Crafting professional resumes with passion.</p>
                     </div>
                     {/* Navigation Links */}
                     <nav className="mt-4 md:mt-0">

@@ -75,7 +75,7 @@ function RichTextEditor({ onRichTextEditorChange, index, defaultValue }) {
         const result = await chatSession.sendMessage(prompt);
         console.log(result.response.text());
         const res = result.response.text();
-        setvalue(res.replace('[', '').replace(']').replace('{', '').replace('}'));
+        setvalue(res.replace('[', '').replace(']').replace('{', '').replace('}').replace("undefined", ''));
         setLoading(false);
     }
 

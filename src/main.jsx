@@ -19,7 +19,12 @@ import { useEffect } from 'react'
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/custom/app-sidebar"
 import { SidebarInset } from "@/components/ui/sidebar"
-import ATS_Score from './ats_score'
+import ATS_Score from './ats_score/[documentId]'
+import { ScoreProvider } from './context/ScoreContext'
+import { registerSW } from 'virtual:pwa-register'
+import { DefferedPromptProvider } from './context/DefferedPromptContext.jsx'
+
+registerSW({ immediate: true })
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -48,7 +53,7 @@ const router = createBrowserRouter([
         element: <EditResume />
       },
       {
-        path: '/dashboard/:documentId/ats_score',
+        path: '/ats_score/:documentId',
         element: <ATS_Score />
       }
     ]
@@ -70,6 +75,7 @@ const router = createBrowserRouter([
 //wrapper component
 function Root() {
   const { theme, setTheme } = useContext(ThemeContext);
+  // const { score, setScore } = useContext(ScoreContext);
   const [open, setOpen] = useState(false)
   useEffect(() => {
     console.log(theme);
@@ -77,19 +83,23 @@ function Root() {
   }, []);
   return (
     <CustomThemeProvider value={{ theme, setTheme }}>
-      <SidebarProvider open={open} onOpenChange={setOpen}>
-        <AppSidebar />
-        <SidebarInset>
-          <ClerkProvider
-            publishableKey={PUBLISHABLE_KEY}
-            signUpFallbackRedirectUrl='/'
-            signInFallbackRedirectUrl='/'
-            afterSignOutUrl="/"
-          >
-            <RouterProvider router={router} />
-          </ClerkProvider>
-        </SidebarInset>
-      </SidebarProvider>
+      <DefferedPromptProvider>
+        <ScoreProvider>
+          <SidebarProvider open={open} onOpenChange={setOpen}>
+            <AppSidebar />
+            <SidebarInset>
+              <ClerkProvider
+                publishableKey={PUBLISHABLE_KEY}
+                signUpFallbackRedirectUrl='/'
+                signInFallbackRedirectUrl='/'
+                afterSignOutUrl="/"
+              >
+                <RouterProvider router={router} />
+              </ClerkProvider>
+            </SidebarInset>
+          </SidebarProvider>
+        </ScoreProvider>
+      </DefferedPromptProvider>
     </CustomThemeProvider>
   )
 }
