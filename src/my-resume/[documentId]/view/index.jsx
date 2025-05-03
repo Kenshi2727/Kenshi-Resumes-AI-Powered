@@ -145,9 +145,9 @@ function ViewResume() {
                                     </DialogTrigger>
                                     <DialogContent className="sm:max-w-[425px]">
                                         <DialogHeader>
-                                            <DialogTitle>Edit profile</DialogTitle>
+                                            <DialogTitle>Please Telegram User Name</DialogTitle>
                                             <DialogDescription>
-                                                Please provide your telegram user name for us to send your resume.
+                                                {'Please provide your telegram user name(without @) for us to send your resume.'}
                                             </DialogDescription>
                                         </DialogHeader>
                                         <div className="grid gap-4 py-4">
