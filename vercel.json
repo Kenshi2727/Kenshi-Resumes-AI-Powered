@@ -8,6 +8,10 @@
         {
             "source": "/:path*",
             "destination": "/index.html"
+        },
+        {
+            "source": "/service-worker.js",
+            "destination": "/service-worker.js"
         }
     ]
 }

@@ -9,6 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      filename: 'service-worker.js',
       manifest,
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'maskable_icon.png'],
       devOptions: {
