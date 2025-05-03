@@ -7,6 +7,8 @@ import GlobalApi from "../../../service/GlobalApi"
 import { useParams } from 'react-router'
 import { ScoreContext } from '@/context/ScoreContext'
 import { LoaderCircle } from 'lucide-react'
+import { toast } from 'sonner'
+import { Howl, Howler } from 'howler';
 
 function Recommendations() {
     const { theme } = useContext(ThemeContext);
@@ -21,7 +23,11 @@ function Recommendations() {
         if (response.status === 200) {
             setScore(response.data.score);
             console.log('ATS score:', response.data.score);
-
+            toast("ATS score fetched successfully!");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
         } else {
             console.error('Error fetching ATS score:', response.statusText);
         }
@@ -33,6 +39,11 @@ function Recommendations() {
         const response = await GlobalApi.GetAtsRecommendations(documentId);
         if (response.status === 200) {
             setRecommendations(response.data.recommendations);
+            toast("Here are your recommendations!");
+            var sound = new Howl({
+                src: ['/notif.mp3']
+            });
+            sound.play();
         }
         else {
             console.error('Error fetching ATS recommendations:', response.statusText);

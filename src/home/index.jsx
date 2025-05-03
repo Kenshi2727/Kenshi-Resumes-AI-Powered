@@ -10,10 +10,12 @@ import { CarouselSize } from '@/components/custom/CarouselSize'
 import { useEffect, useState } from 'react'
 import Footer from '@/components/custom/Footer'
 import Visits from './Visits'
+import { DefferedPromptContext } from '@/context/DefferedPromptContext'
 
 function Home() {
     const fullText = '"Leverage the potential of AI to set yourself apart from the competition."';
     const [displayedText, setDisplayedText] = useState('');
+    const { deferredPrompt, setDeferredPrompt } = useContext(DefferedPromptContext);
 
     useEffect(() => {
         let index = 0;
@@ -29,6 +31,30 @@ function Home() {
         return () => clearInterval(interval);//clean up function to clear interval returned in useEffect
     }, []);
 
+    useEffect(() => {
+        const handler = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+        }
+        window.addEventListener('beforeinstallprompt', handler);
+
+        window.addEventListener('appinstalled', () => {
+            console.log('App installed successfully!');
+        });
+
+    }, [])
+
+    const handleInstall = async () => {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            console.log('User accepted the installation prompt');
+        } else {
+            console.log('User dismissed the installation prompt');
+        }
+        // setDeferredPrompt(null);// Clear the prompt after use
+    }
+
     const { isSignedIn } = useUser();
     const { theme, setTheme } = useContext(ThemeContext);
     return (
@@ -43,20 +69,17 @@ function Home() {
                                 <h3 className={(theme === 'light') ? 'text-center font-medium text-xs sm:text-base' : 'text-center font-medium text-xs sm:text-base bg-black'}>{displayedText}</h3>
                             </div>
                         </div>
-                        <div className='flex justify-center gap-6'>
+                        <div className='sm:flex-row flex flex-col justify-center gap-2 sm:gap-6'>
                             <Link to={isSignedIn ? '/dashboard' : '/auth/sign-in'}>
                                 <Button className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
                                     {isSignedIn ? 'Go to Dashboard' : 'Sign In / Sign Up'} {isSignedIn ? <BookMarked /> : <ListStart />}
                                 </Button>
                             </Link>
 
-                            {!isSignedIn &&
-                                (<Link to='/'>
-                                    <Button onClick={() => alert("Under development------->\nparty popper animation\nConvert it into a Progressive Web App\ncomplete the remaining backend-encryption etc.\nanalytics dashboard--download history,site visit and resume creation frequency charts\nATS SCORE PROMPT AND ATS PIECHART\nPrompt-->\nGive ats score for the resume returning a json structure as follows and do not say anything else.\n{\nats_score:ats score in percentage\n}\nresume automatic sharing on telegram\nreconfiguring ai prompts\nbuilding new footer\ntemp mail and temp user for trial functionality\nresolve dashboard overflow issue")} className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
-                                        Start your Trial ! <ListStart />
-                                    </Button>
-                                </Link>)
-                            }
+                            <Button onClick={handleInstall} className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
+                                Install our Web App
+                            </Button>
+
                         </div>
 
                         <div className='my-5 flex justify-center items-center'>

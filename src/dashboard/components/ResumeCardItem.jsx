@@ -92,7 +92,7 @@ function ResumeCardItem({ resume, refreshData }) {
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>
-                <h2 className={(theme === 'light') ? 'text-center my-1 text-black' : 'text-center my-1 text-[rgba(0,191,255,0.8)]'}>{resume.title}</h2>
+                <h2 className={(theme === 'light') ? 'text-center my-1 text-black' : 'text-center my-1 text-[rgba(0,191,255,0.8)]'}>{(resume.title.length > 9) ? resume.title.slice(0, 6) + "..." : resume.title}</h2>
             </div>
         </div>
         // </Link>

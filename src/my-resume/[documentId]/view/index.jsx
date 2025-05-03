@@ -157,9 +157,9 @@ function ViewResume() {
                                         </div>
                                         <DialogFooter>
                                             <div className="flex justify-between w-full">
-                                                <Button className="bg-black hover:bg-slate-800" onClick={() => setDialogOpen(false)}>Cancel</Button>
+                                                <Button className="bg-black dark:text-white hover:bg-slate-800" onClick={() => setDialogOpen(false)}>Cancel</Button>
                                                 {/* <Link to='https://t.me/resume2727bot'> */}
-                                                <Button type="submit" onClick={async () => {
+                                                <Button type="submit" className="dark:bg-[rgba(0,191,255,0.8)] dark:hover:bg-white" onClick={async () => {
                                                     await handleUpload();
                                                     window.location.href = 'https://t.me/resume2727bot';
                                                 }}>{(uploading) ? <LoaderCircle className='animate-spin' /> : 'Continue'}</Button>

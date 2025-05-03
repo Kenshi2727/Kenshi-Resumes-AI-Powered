@@ -5,7 +5,6 @@ export const ScoreContext = createContext({
     setScore: () => { },
 });
 
-
 export const ScoreProvider = ({ children }) => {
     const [score, setScore] = useState(0);  // Initialize state with 0
 
