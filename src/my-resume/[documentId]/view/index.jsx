@@ -93,8 +93,9 @@ function ViewResume() {
             console.log("Resume uploaded successfully", res);
         }).catch(err => {
             console.log("Error uploading pdf", err);
+        }).finally(() => {
+            setUploading(false);
         });
-        setUploading(false);
     }
 
     const handleAts = async () => {
@@ -161,7 +162,7 @@ function ViewResume() {
                                                 {/* <Link to='https://t.me/resume2727bot'> */}
                                                 <Button type="submit" className="dark:bg-[rgba(0,191,255,0.8)] dark:hover:bg-white" onClick={async () => {
                                                     await handleUpload();
-                                                    window.location.href = 'https://t.me/resume2727bot';
+                                                    { (!uploading) ? window.location.href = 'https://t.me/resume2727bot' : null; }
                                                 }}>{(uploading) ? <LoaderCircle className='animate-spin' /> : 'Continue'}</Button>
                                                 {/* </Link> */}
                                             </div>
