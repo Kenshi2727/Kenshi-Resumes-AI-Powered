@@ -80,8 +80,8 @@ GEMINI_API_KEY=your_gemini_api_key
 
 ```bash
 kenshi-resumes/
-├── client/           # React frontend
-├── server/           # Express backend
+├── src               # React files
+├── server/           # Strapi backend(now the bakend is in node.js as of current upadted knowledge deployed at separate github repo)
 ├── public/           # Static files
 ├── .env              # Environment config
 ├── package.json
