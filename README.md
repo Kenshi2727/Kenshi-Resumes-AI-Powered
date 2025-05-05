@@ -17,16 +17,16 @@
 ## 📸 Preview
 
 <div>
-<img src="public/readme/Screenshot (181).png" width="500px">
-<img src="public/readme/Screenshot (182).png" width="500px">
+<img src="public/readme/Screenshot (181).png" width="300px">
+<img src="public/readme/Screenshot (182).png" width="300px">
 </div>
 <div>
-<img src="public/readme/Screenshot (183).png" width="500px">
-<img src="public/readme/Screenshot (184).png" width="500px">
+<img src="public/readme/Screenshot (183).png" width="300px">
+<img src="public/readme/Screenshot (184).png" width="300px">
 </div>
 <div>
-<img src="public/readme/Screenshot (185).png" width="500px">
-<img src="public/readme/Screenshot (186).png" width="500px">
+<img src="public/readme/Screenshot (185).png" width="300px">
+<img src="public/readme/Screenshot (186).png" width="300px">
 </div>
 ---
 
