@@ -16,8 +16,18 @@
 
 ## 📸 Preview
 
-![App Screenshot](https://your-screenshot-url-here.com)
-
+<div>
+<img src="public/readme/Screenshot (181).png" width="400px">
+<img src="public/readme/Screenshot (182).png" width="400px">
+</div>
+<div>
+<img src="public/readme/Screenshot (183).png" width="400px">
+<img src="public/readme/Screenshot (184).png" width="400px">
+</div>
+<div>
+<img src="public/readme/Screenshot (185).png" width="400px">
+<img src="public/readme/Screenshot (186).png" width="400px">
+</div>
 ---
 
 ## 🚀 Features
@@ -27,6 +37,7 @@
 - 🎨 **Customizable Templates** – Choose from multiple modern and minimal templates.
 - 📱 **Mobile Responsive** – Works perfectly across all devices.
 - 🔒 **Secure & Private** – Your data stays safe and confidential.
+- 📨 **Send Resume to Telegram** - You can use our Kenshi Resumes bot to send resumes on telegram
 
 ---
 
@@ -70,8 +81,8 @@ GEMINI_API_KEY=your_gemini_api_key
 
 ```bash
 kenshi-resumes/
-├── client/           # React frontend
-├── server/           # Express backend
+├── src               # React files
+├── server/           # Strapi backend(now the bakend is in node.js as of current upadted knowledge deployed at separate github repo)
 ├── public/           # Static files
 ├── .env              # Environment config
 ├── package.json
