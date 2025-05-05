@@ -41,6 +41,15 @@
 
 ---
 
+# 🤖 Kenshi Resumes Bot
+
+Kenshi Resumes is an AI-powered bot that helps you build professional resumes with ease. It leverages **Gemini 2.5 Pro**, **React.js**, and **Node.js** to deliver smart, personalized resume generation in just a few clicks. [Kenshi Resumes Bot Link](https://t.me/resume2727bot) 
+
+
+<img src="public/readme/Screenshot (187).png" width="300px" height="350px">
+
+## ✨ Features
+
 ## 🛠 Tech Stack
 
 | Frontend      | Backend         | AI Engine         | Styling        | Database       |
