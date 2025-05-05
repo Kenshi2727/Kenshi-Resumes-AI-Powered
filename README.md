@@ -1,16 +1,116 @@
+<h1 align="center">✨ Kenshi Resumes</h1>
 
-# [Link to Applicaion--->](https://kenshi-resumes-ai-powered.vercel.app/)
-## [Production Environment](http://kenshi.krishnayadav.xyz/) deployment by [Obsidian Maximus](Github.com/obsidianmaximus)
+<p align="center">
+  AI-Powered Resume Builder that helps you create professional, elegant resumes in seconds.
+  <br />
+  <strong>Built using React, Gemini AI, and PostgreSQL</strong>
+</p>
 
-<hr>
+<p align="center">
+  <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/stargazers"><img src="https://img.shields.io/github/stars/Kenshi2727/Kenshi-Resumes-AI-Powered?style=flat-square" /></a>
+  <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/issues"><img src="https://img.shields.io/github/issues/Kenshi2727/Kenshi-Resumes-AI-Powered?style=flat-square" /></a>
+  <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Kenshi2727/Kenshi-Resumes-AI-Powered?style=flat-square" /></a>
+</p>
 
-# React + Vite
+---
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 📸 Preview
 
-Currently, two official plugins are available:
+![App Screenshot](https://your-screenshot-url-here.com)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
+
+## 🚀 Features
+
+- 🧠 **AI-Generated Content** – Gemini 2.5 Pro helps generate accurate and impactful resume content.
+- 🖌️ **Live Resume Editor** – Make real-time edits with instant preview.
+- 🎨 **Customizable Templates** – Choose from multiple modern and minimal templates.
+- 📱 **Mobile Responsive** – Works perfectly across all devices.
+- 🔒 **Secure & Private** – Your data stays safe and confidential.
+
+---
+
+## 🛠 Tech Stack
+
+| Frontend      | Backend         | AI Engine         | Styling        | Database       |
+|---------------|------------------|--------------------|----------------|----------------|
+| React + Vite  | Node.js + Express | Gemini 2.5 Pro API | Tailwind CSS   | PostgreSQL     |
+
+---
+
+## ⚙️ Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/Kenshi2727/kenshi-resumes.git
+cd kenshi-resumes
+
+# Install dependencies
+npm install
+
+# Setup environment variables
+cp .env.example .env
+# Add your own values for DATABASE_URL, GEMINI_API_KEY, etc.
+
+# Start the development server
+npm run dev
+```
+
+## 🌍 Environment Variables
+
+To run this project, create a `.env` file in the root directory and add the following variables:
+
+```env
+PORT=3000
+DATABASE_URL=your_postgres_url
+GEMINI_API_KEY=your_gemini_api_key
+```
+
+## 📁 Project Structure
+
+```bash
+kenshi-resumes/
+├── client/           # React frontend
+├── server/           # Express backend
+├── public/           # Static files
+├── .env              # Environment config
+├── package.json
+└── README.md
+```
+
+## 🙋‍♂️ Author
+
+**Abhishek Mathur**  
+🏠 Lucknow, India  
+📧 [abhishekmathurofficial@gmail.com](mailto:abhishekmathurofficial@gmail.com)  
+💼 [LinkedIn](https://www.linkedin.com/in/abhishek-mathur-29569a260/)  
+🐙 [GitHub](https://github.com/Kenshi2727)
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.  
+See the [LICENSE](./LICENSE) file for details.
+
+---
+
+## 🌟 Support & Contribute
+
+If you find this project useful, please ⭐ **star** the repo and consider contributing!
+
+```bash
+# Fork this repo
+git checkout -b feature/your-feature-name
+git commit -m "✨ Add your feature"
+git push origin feature/your-feature-name
+# Then open a Pull Request
+```
+
+> Made with ❤️ by Abhishek Mathur  
+> Feel free to reach out if you have suggestions or need help!
+
+
+
 
 
