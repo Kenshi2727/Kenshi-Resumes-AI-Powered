@@ -37,7 +37,8 @@
 - 🎨 **Customizable Templates** – Choose from multiple modern and minimal templates.
 - 📱 **Mobile Responsive** – Works perfectly across all devices.
 - 🔒 **Secure & Private** – Your data stays safe and confidential.
-- 📨 **Send Resume to Telegram** - You can use our Kenshi Resumes bot to send resumes on telegram
+- 📨 **Send Resume to Telegram** - You can use our Kenshi Resumes bot to send resumes on telegram.
+- ⚙️ **ATS Checker** - Using the power of Gemini 2.5 Pro you can calaculate your resume ATS score.
 
 ---
 
