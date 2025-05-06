@@ -37,9 +37,19 @@
 - 🎨 **Customizable Templates** – Choose from multiple modern and minimal templates.
 - 📱 **Mobile Responsive** – Works perfectly across all devices.
 - 🔒 **Secure & Private** – Your data stays safe and confidential.
-- 📨 **Send Resume to Telegram** - You can use our Kenshi Resumes bot to send resumes on telegram
+- 📨 **Send Resume to Telegram** - You can use our Kenshi Resumes bot to send resumes on telegram.
+- ⚙️ **ATS Checker** - Using the power of Gemini 2.5 Pro you can calaculate your resume ATS score.
 
 ---
+
+# 🤖 Kenshi Resumes Bot
+
+Kenshi Resumes is an AI-powered bot that helps you build professional resumes with ease. It leverages **Gemini 2.5 Pro**, **React.js**, and **Node.js** to deliver smart, personalized resume generation in just a few clicks. [Kenshi Resumes Bot Link](https://t.me/resume2727bot) 
+
+
+<img src="public/readme/Screenshot (187).png" width="300px" height="350px">
+
+## ✨ Features
 
 ## 🛠 Tech Stack
 
