@@ -90,10 +90,10 @@ function ViewResume() {
         let formData = new FormData();
         formData.append('files', pdfBlob, resumeInfo?.firstName + " " + resumeInfo?.lastName + "'s resume.pdf");
         GlobalApi.UploadResumeById(documentId, formData, telegramUserName).then(res => {
-            console.log("Resume uploaded successfully", res);
-        }).catch(err => {
-            console.log("Error uploading pdf", err);
-        }).finally(() => {
+            if (res.status === 200)
+                console.log("Resume uploaded successfully", res);
+            else
+                console.log("Error uploading pdf", res);
             setUploading(false);
         });
     }
