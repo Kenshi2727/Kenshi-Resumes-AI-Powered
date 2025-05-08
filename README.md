@@ -1,5 +1,4 @@
-<h1 align="center">✨ Kenshi Resumes</h1>
-
+<h1 align="center">✨ Kenshi Resumes</h1>                     
 <p align="center">
   AI-Powered Resume Builder that helps you create professional, elegant resumes in seconds.
   <br />
@@ -14,6 +13,8 @@
 
 [Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/)
 ---
+[Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md)
+<hr />
 
 ## 📸 Preview
 
