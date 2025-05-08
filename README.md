@@ -12,6 +12,7 @@
   <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Kenshi2727/Kenshi-Resumes-AI-Powered?style=flat-square" /></a>
 </p>
 
+[Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/)
 ---
 
 ## 📸 Preview
