@@ -9,7 +9,6 @@ import { ThemeContext } from '@/context/ThemeContext'
 import { CarouselSize } from '@/components/custom/CarouselSize'
 import { useEffect, useState } from 'react'
 import Footer from '@/components/custom/Footer'
-import Visits from './Visits'
 import { DefferedPromptContext } from '@/context/DefferedPromptContext'
 
 function Home() {
@@ -61,7 +60,7 @@ function Home() {
         <div className={(theme === 'light') ? 'bg-gradient-to-r from-red-200 to-yellow-200' : 'bg-[url("../home3.png")] bg-cover bg-no-repeat bg-center text-white'}>
             <Header />
             <div className={(theme === 'light') ? 'bg-[url("../textures/batthern.png")] p-10' : 'p-10'}>
-                <div className='min-h-screen flex justify-center items-center'>
+                <div className='min-h-screen w-screen flex justify-center items-center'>
                     <div className='flex flex-col gap-2 place-items-center'>
                         <div className='flex flex-col gap-2 mt-10 place-items-center'>
                             <h1 className='font-serif text-center mb-10'>Welcome to <span className={(theme === 'light') ? 'bg-gradient-to-r from-violet-400 to-indigo-600 p-2 border rounded-xl text-white text-2xl sm:text-5xl whitespace-nowrap shadow-xl shadow-primary' : 'bg-black p-2 border-2 border-white rounded-xl text-white text-2xl sm:text-5xl whitespace-nowrap shadow-xl shadow-[rgba(0,191,255,0.8)]'}>Kenshi Resumes</span> </h1>
@@ -85,11 +84,6 @@ function Home() {
                         <div className='my-5 flex justify-center items-center'>
                             <CarouselSize />
                         </div>
-
-                        <div className='my-5 w-screen flex justify-center items-center'>
-                            <Visits />
-                        </div>
-
                     </div>
                 </div>
             </div>
