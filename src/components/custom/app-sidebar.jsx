@@ -31,42 +31,42 @@ const items = [
     {
         title: "Developers",
         description: "Team profiles",
-        url: "/",
+        url: "https://github.com/Kenshi2727",
         icon: Users,
         category: "content"
     },
+    {
+        title: "Documentation",
+        description: "API & guides",
+        url: "https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md",
+        icon: Book,
+        category: "content"
+    },
     // {
-    //     title: "Documentation",
-    //     description: "API & guides",
+    //     title: "Blog",
+    //     description: "Latest articles",
     //     url: "/",
-    //     icon: Book,
+    //     icon: Calendar,
     //     category: "content"
     // },
     {
-        title: "Blog",
-        description: "Latest articles",
-        url: "/",
-        icon: Calendar,
-        category: "content"
-    },
-    {
         title: "About Us",
         description: "Product information",
-        url: "/",
+        url: "/about",
         icon: Info,
         category: "Additional Information"
     },
     {
         title: "Developer Login",
         description: "Access for developers only",
-        url: "/",
+        url: "#",
         icon: Info,
         category: "Additional Information"
     },
     {
         title: "Feedback",
         description: "Share your thoughts",
-        url: "/",
+        url: "/feedback",
         icon: Settings,
         category: "User Support"
     },
@@ -127,7 +127,6 @@ export function AppSidebar() {
                                             `}
                                             onClick={() => {
                                                 setActiveItem(item.title)
-                                                alert("New features coming soon!")
                                             }}
                                             onMouseEnter={() => {
                                                 setHoveredItem(item.title)

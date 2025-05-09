@@ -23,6 +23,8 @@ import ATS_Score from './ats_score/[documentId]'
 import { ScoreProvider } from './context/ScoreContext'
 import { registerSW } from 'virtual:pwa-register'
 import { DefferedPromptProvider } from './context/DefferedPromptContext.jsx'
+import Feedback from './sidebar-components/Feedback'
+import About from './sidebar-components/About'
 
 registerSW({ immediate: true })
 
@@ -55,6 +57,14 @@ const router = createBrowserRouter([
       {
         path: '/ats_score/:documentId',
         element: <ATS_Score />
+      },
+      {
+        path: '/about',
+        element: <About />
+      },
+      {
+        path: '/feedback',
+        element: <Feedback />
       }
     ]
   },
