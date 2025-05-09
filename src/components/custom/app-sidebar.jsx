@@ -56,6 +56,13 @@ const items = [
         icon: Info,
         category: "Additional Information"
     },
+    // {
+    //     title: "Developer Login",
+    //     description: "Access for developers only",
+    //     url: "#",
+    //     icon: Info,
+    //     category: "Additional Information"
+    // },
     {
         title: "Feedback",
         description: "Share your thoughts",
@@ -155,16 +162,7 @@ export function AppSidebar() {
                         </SidebarGroupContent>
                     </SidebarGroup>
                 ))}
-
             </SidebarContent>
-            <div className="absolute bottom-0 left-0 right-0 p-4 mb-2">
-                <div className={`rounded-lg ${isDark ? 'bg-slate-800' : 'bg-slate-100'} p-3 text-sm transition-all duration-300`}>
-                    <p className={`${textColor} font-medium text-xs`}>Pro Tip</p>
-                    <p className={`${isDark ? 'text-slate-400' : 'text-slate-600'} text-xs mt-1`}>
-                        Tailor your resume to match each job description — keywords matter.
-                    </p>
-                </div>
-            </div>
         </Sidebar>
     )
 }
