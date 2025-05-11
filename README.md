@@ -34,7 +34,7 @@
 
 ## 🚀 Features
 
-- 🧠 **AI-Generated Content** – Gemini 2.5 Pro helps generate accurate and impactful resume content.
+- 🧠 **AI-Generated Content** – Gemini Flash 2.0 helps generate accurate and impactful resume content.
 - 🖌️ **Live Resume Editor** – Make real-time edits with instant preview.
 - 📱 **Mobile Responsive** – Works perfectly across all devices.
 - 🔒 **Secure & Private** – Your data stays safe and confidential.
@@ -56,7 +56,7 @@ Kenshi Resumes is an AI-powered bot that helps you build professional resumes wi
 
 | Frontend      | Backend         | AI Engine         | Styling        | Database       |
 |---------------|------------------|--------------------|----------------|----------------|
-| React + Vite  | Node.js + Express | Gemini 2.5 Pro API | Tailwind CSS   | PostgreSQL     |
+| React + Vite  | Node.js + Express | Gemini Flash 2.0 API | Tailwind CSS   | PostgreSQL     |
 
 ---
 
