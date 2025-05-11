@@ -46,6 +46,8 @@ const GetAtsScore = (id) => axiosClient.get(`/user-resumes/fetchScore/${id}`)
 
 const GetAtsRecommendations = (id) => axiosClient.get(`/user-resumes/fetchRecommendations/${id}`)
 
+const SendFeedback = (data) => axiosClient.post('/feedbacks', data)
+
 export default {
     CreateNewResume,
     GetUserResumes,
@@ -55,5 +57,6 @@ export default {
     UploadResumeById,
     UploadResumeForAts,
     GetAtsScore,
-    GetAtsRecommendations
+    GetAtsRecommendations,
+    SendFeedback
 }

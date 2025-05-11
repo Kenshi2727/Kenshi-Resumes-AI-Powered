@@ -31,7 +31,7 @@ function Skills({ enabledNext }) {
         inactiveFillColor: (theme === 'light') ? '#fbf1a9' : '#B3EFFF'
     }
     const handleChange = (index, name, value) => {
-        const newEntries = skillsList.slice();
+        const newEntries = skillsList.slice();//create a copy of the array
         newEntries[index][name] = value;
         setSkillsList(newEntries);
     }

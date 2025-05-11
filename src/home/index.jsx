@@ -2,7 +2,7 @@ import React from 'react'
 import Header from '@/components/custom/Header'
 import { Button } from '@/components/ui/button'
 import { Link } from 'react-router'
-import { BookMarked, ListStart } from 'lucide-react'
+import { BookMarked, DownloadIcon, ListStart } from 'lucide-react'
 import { useUser } from '@clerk/clerk-react'
 import { useContext } from 'react'
 import { ThemeContext } from '@/context/ThemeContext'
@@ -76,7 +76,7 @@ function Home() {
                             </Link>
 
                             <Button onClick={handleInstall} className={(theme === 'light') ? "my-3 text-center bg-gradient-to-r from-violet-400 to-indigo-600 shadow-lg shadow-primary" : 'text-white text-center my-3 bg-gradient-to-r from-slate-900 to-slate-700 shadow-lg shadow-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)] hover:border-[rgba(0,191,255,0.8)]'}>
-                                Install our Web App
+                                Download App <DownloadIcon />
                             </Button>
 
                         </div>
