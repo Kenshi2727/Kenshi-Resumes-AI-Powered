@@ -71,7 +71,7 @@ cd kenshi-resumes
 npm install
 
 # Setup environment variables
-cp .env.example .env
+touch .env
 # Add your own values for DATABASE_URL, GEMINI_API_KEY, etc.
 
 # Start the development server
