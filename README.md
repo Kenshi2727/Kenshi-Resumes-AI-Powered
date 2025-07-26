@@ -14,7 +14,8 @@
 [Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/)
 ---
 [Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md)
-<hr />
+
+<img src="https://www.waderspower.co.in/images/line-neon.gif" width=100% height=12 />
 
 ## 📸 Preview
 
