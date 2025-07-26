@@ -13,9 +13,9 @@
 </p>
 <img src="https://www.waderspower.co.in/images/line-neon.gif" width=100% height=12 />
 
-[Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/)
-<br />
-[Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md)
+## [Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/) <img src="https://cdn.pixabay.com/animation/2023/05/02/07/54/07-54-19-566_512.gif" height=30 />
+
+## [Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md) <img src="https://cdn.pixabay.com/animation/2025/04/15/08/13/08-13-29-14_512.gif" height=30 />
 
 ---
 ## 📸 Preview
