@@ -78,6 +78,7 @@ This section outlines the high-level organization of the code for both frontend 
 kenshi-resumes/
 ├── src/               # React source files (components, pages, utilities)
 ├── public/            # Static files (index.html, images, favicon)
+├── server/            # Legacy Strapi Backend 
 ├── .env               # Environment variables config (API keys, endpoints)
 ├── package.json       # Project metadata and scripts
 └── README.md          # Documentation
