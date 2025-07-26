@@ -115,7 +115,7 @@ kenshi-resumes-backend/
 
 ## Backend API Documentation
 
-All API routes are prefixed by `/api`. The backend does **not** enforce user authentication; instead, it uses user-provided identifiers (like email or document ID) to fetch records. (For security, a real deployment might add token-based auth, but it is not implemented here.)
+All API routes are prefixed by `/api`. The backend does **not** enforce user authentication; instead, it uses user-provided identifiers (like email or document ID) to fetch records. (For security, a real deployment might add token-based auth, but it is not implemented here.Instaed on client side, clerk is used.)
 
 ### Resume Endpoints
 
@@ -313,7 +313,7 @@ For major changes, it’s a good idea to open an issue first to discuss plans wi
 
 * **License:** Kenshi Resumes (both frontend and backend) is released under the **MIT License**. This allows anyone to use, copy, and modify the code freely, as long as the license notice is included.
 * **Third-Party Software:** The project depends on several open-source libraries (React, Express, Tailwind, etc.) as listed in `package.json`. These libraries are each under their own licenses (MIT, BSD, etc.).
-* **AI Model:** Kenshi Resumes uses Google’s Gemini 2.5 Pro via API. Gemini is a proprietary model by Google DeepMind.
+* **AI Model:** Kenshi Resumes uses Google’s Gemini Flash 2.0 via API. Gemini is a proprietary model by Google DeepMind.
 * **Platforms:** The deployed app uses Vercel (for frontend) and Railway (for backend). Both are credited for providing hosting infrastructure.
 * **Inspirations:** No direct forks, but features like live editing and AI generation are influenced by modern resume builder tools. The Telegram bot uses the standard Bot API.
 
