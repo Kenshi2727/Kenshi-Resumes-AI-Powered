@@ -1,4 +1,5 @@
-<h1 align="center">✨ Kenshi Resumes</h1>                     
+<h1 align="center">✨ Kenshi Resumes</h1>       
+<img src="https://www.waderspower.co.in/images/line-neon.gif" width=100% height=12 />
 <p align="center">
   AI-Powered Resume Builder that helps you create professional, elegant resumes in seconds.
   <br />
@@ -10,13 +11,13 @@
   <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/issues"><img src="https://img.shields.io/github/issues/Kenshi2727/Kenshi-Resumes-AI-Powered?style=flat-square" /></a>
   <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Kenshi2727/Kenshi-Resumes-AI-Powered?style=flat-square" /></a>
 </p>
-
-[Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/)
----
-[Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md)
-
 <img src="https://www.waderspower.co.in/images/line-neon.gif" width=100% height=12 />
 
+[Visit Kenshi Resumes](https://kenshi-resumes-ai-powered.vercel.app/)
+<br />
+[Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md)
+
+---
 ## 📸 Preview
 
 <div>
