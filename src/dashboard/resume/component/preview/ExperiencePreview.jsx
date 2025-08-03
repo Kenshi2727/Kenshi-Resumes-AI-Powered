@@ -30,7 +30,7 @@ function ExperiencePreview({ resumeInfo }) {
                     </p> */}
                     {/* dangerouslySetInnerHTML is used to render the html tags */}
                     {/*A single div is used */}
-                    <div dangerouslySetInnerHTML={{ __html: experience?.workSummery }} />
+                    <div className="text-base md:text-sm" dangerouslySetInnerHTML={{ __html: experience?.workSummery }} />
                 </div>
             ))}
         </div>
