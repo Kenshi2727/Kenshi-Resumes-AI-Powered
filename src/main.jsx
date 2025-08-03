@@ -84,6 +84,15 @@ const router = createBrowserRouter([
 
 //wrapper component
 function Root() {
+  //pinging backend
+  useEffect(() => {
+    setInterval(() => {
+      fetch('https://kenshi-resumes-backend.onrender.com/')
+        .then(() => console.log("Backend Pinged!"))
+        .catch(error => console.error('Error pinging backend:', error));
+    }, 840000); //ping every 14 minutes
+  }, []);
+
   const { theme, setTheme } = useContext(ThemeContext);
   // const { score, setScore } = useContext(ScoreContext);
   const [open, setOpen] = useState(false)
