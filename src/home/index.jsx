@@ -57,7 +57,7 @@ function Home() {
     const { isSignedIn } = useUser();
     const { theme, setTheme } = useContext(ThemeContext);
     return (
-        <div className={(theme === 'light') ? 'bg-gradient-to-r from-red-200 to-yellow-200' : 'bg-[url("../home3.png")] bg-cover bg-no-repeat text-white'}>
+        <div className={(theme === 'light') ? 'bg-gradient-to-r from-red-200 to-yellow-200' : 'bg-[url("../home3.png")] bg-cover sm:bg-center bg-no-repeat text-white'}>
             <Header />
             <div className={(theme === 'light') ? 'bg-[url("../textures/batthern.png")] p-10 w-screen' : 'p-10 w-screen'}>
                 <div className='min-h-screen flex justify-center items-center'>
