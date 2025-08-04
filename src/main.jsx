@@ -84,15 +84,6 @@ const router = createBrowserRouter([
 
 //wrapper component
 function Root() {
-  //pinging backend
-  useEffect(() => {
-    setInterval(() => {
-      fetch('https://kenshi-resumes-backend.onrender.com/')
-        .then(() => console.log("Backend Pinged!"))
-        .catch(error => console.error('Error pinging backend:', error));
-    }, 840000); //ping every 14 minutes
-  }, []);
-
   const { theme, setTheme } = useContext(ThemeContext);
   // const { score, setScore } = useContext(ScoreContext);
   const [open, setOpen] = useState(false)
@@ -100,6 +91,20 @@ function Root() {
     console.log(theme);
     ;
   }, []);
+
+
+  // PINGING BACKEND
+  useEffect(() => {
+    console.log("useEffect in App is running");
+    const interval = setInterval(() => {
+      fetch(import.meta.env.VITE_BASE_URL)
+        .then(() => console.log("Backend Pinged!"))
+        .catch(error => console.error('Error pinging backend:', error));
+    }, 840000); //ping every 14 minutes
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
   return (
     <CustomThemeProvider value={{ theme, setTheme }}>
       <DefferedPromptProvider>
