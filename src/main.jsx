@@ -100,7 +100,8 @@ function Root() {
       fetch(import.meta.env.VITE_BASE_URL)
         .then(() => console.log("Backend Pinged!"))
         .catch(error => console.error('Error pinging backend:', error));
-    }, 840000); //ping every 14 minutes
+      // }, 840000); //ping every 14 minutes
+    }, 3000); //ping every 3 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
