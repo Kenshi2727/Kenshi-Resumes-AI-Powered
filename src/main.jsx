@@ -98,10 +98,10 @@ function Root() {
     console.log("useEffect in App is running");
     const interval = setInterval(() => {
       fetch(import.meta.env.VITE_BASE_URL)
-        .then(() => console.log("Backend Pinged!"))
+        .then(() => console.log("%c✅Backend Pinged!", 'color: green; font-weight: bold;'))
         .catch(error => console.error('Error pinging backend:', error));
-      // }, 840000); //ping every 14 minutes
-    }, 3000); //ping every 3 seconds
+    }, 840000); //ping every 14 minutes
+    // }, 3000); //ping every 3 seconds(for development only)
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
