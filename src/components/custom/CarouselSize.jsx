@@ -26,7 +26,7 @@ export function CarouselSize() {
             <CarouselContent>
                 {data.map((item, index) => (
                     <CarouselItem key={index} className={(theme === 'light') ? "pl-1 md:basis-1/2 lg:basis-[40%] shadow-md" : "pl-1 md:basis-1/2 lg:basis-[40%] shadow-xl shadow-[rgba(0,191,255,0.8)]"}>
-                        <div className="p-1">
+                        <div className="p-0">
                             <Card className="h-[420px] sm:h-[400px] md:h-[450px] xl:h-[400px] max-w-[300px] box-border">
                                 <CardHeader className="h-[120px]">
                                     <CardTitle className="text-xl">{item.headline}</CardTitle>
