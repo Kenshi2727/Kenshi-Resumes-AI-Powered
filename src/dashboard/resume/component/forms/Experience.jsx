@@ -17,8 +17,8 @@ const formField = {
     companyName: '',
     city: '',
     state: '',
-    startDate: '',
-    endDate: '',
+    startDate: null,
+    endDate: null,
     workSummery: ''
 };
 
@@ -70,8 +70,8 @@ function Experience({ enabledNext }) {
             companyName: '',
             city: '',
             state: '',
-            startDate: '',
-            endDate: '',
+            startDate: null,
+            endDate: null,
             workSummery: ''
         }]);
         console.log(experienceList);

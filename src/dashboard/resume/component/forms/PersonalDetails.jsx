@@ -102,12 +102,12 @@ function PersonalDetails({ enabledNext }) {
 
                     <div>
                         <label className='text-sm'>Phone</label>
-                        <Input name="phone" defaultValue={resumeInfo?.phone} required onChange={handleInputChange} />
+                        <Input name="phone" type="tel" onInvalid="this.setCustomValidity('Enter a valid 10-digit phone number')" onInput="this.setCustomValidity('haha')" pattern="[0-9]{10}" defaultValue={resumeInfo?.phone} required onChange={handleInputChange} />
                     </div>
 
                     <div>
                         <label className='text-sm'>Email</label>
-                        <Input name="email" defaultValue={resumeInfo?.email} required onChange={handleInputChange} />
+                        <Input name="email" type="email" defaultValue={resumeInfo?.email} required onChange={handleInputChange} />
                     </div>
                 </div>
 

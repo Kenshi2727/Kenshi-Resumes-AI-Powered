@@ -24,8 +24,8 @@ function Education({ enabledNext }) {
         university: '',
         degree: '',
         major: '',
-        startDate: '',
-        endDate: '',
+        startDate: null,
+        endDate: null,
         description: ''
     }]);
 
@@ -41,8 +41,8 @@ function Education({ enabledNext }) {
             university: '',
             degree: '',
             major: '',
-            startDate: '',
-            endDate: '',
+            startDate: null,
+            endDate: null,
             description: ''
         }]);
     }
