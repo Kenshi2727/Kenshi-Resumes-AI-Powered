@@ -1,0 +1,16 @@
+name: Ping Backend Every 15 Minutes
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  #  Officially supported by GitHub (every 15 minutes)
+  workflow_dispatch:        #  Optional: lets you manually run from GitHub UI
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send ping to backend
+        run: |
+          echo "Pinging backend at ${{ secrets.BACKEND_PING_URL }}"
+          curl -sSf ${{ secrets.BACKEND_PING_URL }}
