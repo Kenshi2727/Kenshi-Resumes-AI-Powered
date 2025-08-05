@@ -46,27 +46,27 @@ function Footer() {
                     <nav className="mt-4 md:mt-0">
                         <ul className="flex gap-6">
                             <li>
-                                <a href="#about" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
+                                <a href="/about" target="_blank" rel="noopener noreferrer" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     About
                                 </a>
                             </li>
                             <li>
-                                <a href="#services" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
+                                <a href={import.meta.env.VITE_BASE_URL} target="_blank" rel="noopener noreferrer" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Services
                                 </a>
                             </li>
                             <li>
-                                <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
+                                <a href="https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered" target="_blank" rel="noopener noreferrer" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Source
                                 </a>
                             </li>
                             <li>
-                                <a href="#contact" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
+                                <a href="https://github.com/Kenshi2727/" target="_blank" rel="noopener noreferrer" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Contact
                                 </a>
                             </li>
                             <li>
-                                <a href="#blog" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
+                                <a href="https://www.kenshi.dev/" target="_blank" rel="noopener noreferrer" className={(theme === 'light') ? "text-sm hover:underline" : 'text-sm hover:underline text-[rgba(0,191,255,0.8)] hover:text-[rgba(0,191,255,0.8)]'}>
                                     Blog
                                 </a>
                             </li>

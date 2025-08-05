@@ -19,28 +19,32 @@ const items = [
         description: "Main page",
         url: "/",
         icon: Home,
-        category: "navigation"
+        category: "navigation",
+        external: false
     },
     {
         title: "Dashboard",
         description: "Analytics & overview",
         url: "/dashboard",
         icon: Layout,
-        category: "navigation"
+        category: "navigation",
+        external: false
     },
     {
         title: "Developers",
         description: "Team profiles",
         url: "https://github.com/Kenshi2727",
         icon: Users,
-        category: "content"
+        category: "content",
+        external: true
     },
     {
         title: "Documentation",
         description: "API & guides",
         url: "https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md",
         icon: Book,
-        category: "content"
+        category: "content",
+        external: true
     },
     // {
     //     title: "Blog",
@@ -54,7 +58,8 @@ const items = [
         description: "Product information",
         url: "/about",
         icon: Info,
-        category: "Additional Information"
+        category: "Additional Information",
+        external: false
     },
     // {
     //     title: "Developer Login",
@@ -68,7 +73,8 @@ const items = [
         description: "Share your thoughts",
         url: "/feedback",
         icon: Settings,
-        category: "User Support"
+        category: "User Support",
+        external: false
     },
 ]
 
