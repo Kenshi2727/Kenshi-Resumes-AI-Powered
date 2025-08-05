@@ -25,8 +25,12 @@ import { registerSW } from 'virtual:pwa-register'
 import { DefferedPromptProvider } from './context/DefferedPromptContext.jsx'
 import Feedback from './sidebar-components/Feedback'
 import About from './sidebar-components/About'
+import MaintenancePage from './maintainance/index.jsx'
 
 registerSW({ immediate: true })
+
+//maintenance notice
+const maintenance = true; //set to true to enable maintenance mode
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
@@ -105,6 +109,15 @@ function Root() {
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
+
+  // If maintenance mode is enabled
+  if (maintenance) {
+    return (
+      <div className="min-h-screen bg-gray-100">
+        <MaintenancePage />
+      </div>
+    );
+  }
 
   return (
     <CustomThemeProvider value={{ theme, setTheme }}>
