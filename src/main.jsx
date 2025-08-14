@@ -30,7 +30,7 @@ import MaintenancePage from './maintainance/index.jsx'
 registerSW({ immediate: true })
 
 //maintenance notice
-const maintenance = true; //set to true to enable maintenance mode
+const maintenance = false; //set to true to enable maintenance mode
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
