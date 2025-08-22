@@ -15,15 +15,15 @@
   * [Backend Structure](#backend-structure)
 * [Backend API Documentation](#backend-api-documentation)
 
-  * [Resume Endpoints](#resume-endpoints)
-  * [Flash Recommendations](#flash-recommendations)
-  * [Telegram Bot Routes](#telegram-bot-routes)
+  * [API Endpoints](#api-endpoints-)
+  * [AI Model Modules](#ai-model-modules)
+  * [Telegram Bot](#telegram-bot)
 * [Frontend Components & Interactions](#frontend-components--interactions)
 * [Setup & Installation](#setup--installation)
 * [Deployment](#deployment)
 
   * [Frontend (Vercel)](#frontend-vercel)
-  * [Backend (Railway)](#backend-railway)
+  * [Backend (Render)](#backend-render)
 * [Contribution Guidelines](#contribution-guidelines)
 * [License & Third-Party Credits](#license--third-party-credits)
 
@@ -114,68 +114,847 @@ kenshi-resumes-backend/
 * **`steps.txt`:** Contains notes on development and deployment process (e.g., connecting to Railway).
 * **`package.json`:** Lists dependencies (Express, pg, etc.) and scripts like `start`.
 
-## Backend API Documentation
+# Backend API Documentation
 
 All API routes are prefixed by `/api`. The backend does **not** enforce user authentication; instead, it uses user-provided identifiers (like email or document ID) to fetch records. (For security, a real deployment might add token-based auth, but it is not implemented here.Instaed on client side, clerk is used.)
 
-### Resume Endpoints
+## API Endpoints-
 
-* **POST `/api/user-resumes`** – *Generate and save a new resume.*
+## Base path
+All endpoints are rooted at:
+```
+/api
+```
 
-  * **Request Body:** JSON object with a `data` field. Example:
+---
 
+## Quick Reference Table
+
+| Endpoint | Method | Description |
+|---|---:|---|
+| `/api/user-resumes/upload/:id/:teleUser` | **POST** | Upload a resume file (Telegram user). Expects multipart `files`. |
+| `/api/user-resumes` | **POST** | Create a new resume entry (inserts into DB). **Response:** fixed `{ data: { documentId: 1 } }` (see note). |
+| `/api/user-resumes?userEmail=<email>` | **GET** | Get all resumes for a user. |
+| `/api/user-resumes/:id?populate=*` | **GET** | Get a resume and its related sections (experience, education, skills). |
+| `/api/user-resumes/:id` | **PUT** | Update a specific resume section (`summery`, `personalDetails`, `experience`, `education`, `skills`, or theme color). |
+| `/api/user-resumes/:id` | **DELETE** | Delete a resume and related DB rows (resume, experience, education, skills, telegramusers). |
+| `/api/user-resumes/ats/:id` | **POST** | Upload a resume file for ATS processing. Expects multipart `files`. |
+| `/api/user-resumes/fetchScore/:id` | **GET** | Return ATS score JSON after `flashAI` has populated `dataForAts`. |
+| `/api/user-resumes/fetchRecommendations/:id` | **GET** | Return recommendations array after ATS processing and `fetchRecommendations()` runs. |
+| `/api/feedbacks` | **POST** | Submit feedback. |
+| `/api/feedbacks` | **GET** | Get all feedbacks (stored in server memory). |
+
+---
+
+## Detailed Endpoints
+
+### 1. Upload Resume (Telegram User)
+**POST** `/api/user-resumes/upload/:id/:teleUser`
+
+**Description:** Uploads a PDF (or other file) for a Telegram user. The route uses `multer` with memory storage and expects the file field named `files`. The file buffer is inserted into the `telegramusers` table. The server also updates `sharedData` (buffer, id, fileName).
+
+**Path params:**
+- `:id` — documentId to store in DB (string)
+- `:teleUser` — telegram username (string)
+
+**Request headers:**
+```
+Content-Type: multipart/form-data
+```
+
+**Request body (multipart):**
+- `files` — file binary (uploaded file)
+
+**Behavior & responses (per code):**
+
+- If no file is sent:
+  - **Status:** `400 Bad Request`
+  - **Body (JSON):**
     ```json
-    {
-      "data": {
-        "title": "Senior Software Engineer",
-        "documentId": "some-unique-uuid",
-        "userEmail": "user@example.com",
-        "userName": "Jane Doe"
-      }
-    }
-    ```
-  * **Function:** The server uses these details (name, email, title) to prompt Gemini and generate resume content. It saves the generated resume in the database (along with `documentId` and metadata).
-  * **Response:** On success, returns `{ data: { title, documentId, userEmail, userName } }` (echoing the saved info).
-  * *Example Response:*
-
-    ```json
-    {
-      "data": {
-        "title": "Senior Software Engineer",
-        "documentId": "generated-uuid",
-        "userEmail": "jane@example.com",
-        "userName": "Jane Doe"
-      }
-    }
+    { "error": "No file uploaded" }
     ```
 
-* **GET `/api/user-resumes`** – *Retrieve a previously generated resume.*
+- If file is received and DB insert succeeds:
+  - **Status:** `200 OK`
+  - **Body (plain text):** (exact string)
+    ```
+    File uploaded successfully with id <id>
+    ```
+  - Example: `File uploaded successfully with id 12345`
 
-  * **Query Parameters:** `userEmail` (e.g. `/api/user-resumes?userEmail=jane@example.com`).
-  * **Function:** Looks up the resume(s) associated with that email in the database.
-  * **Response:** Returns the stored resume data (e.g. title, documentId, userName, plus the AI-generated content) for the user. (If multiple resumes per email are allowed, it might return all or the latest; refer to backend code for specifics.)
+- If DB insertion / other error occurs:
+  - The code logs the error to console; there is no explicit error `res.status(...)` other than the 400 case — but failures will be visible in server logs.
 
-### Flash Recommendations
+**Notes:**
+- The code stores the file buffer to DB column `pdf` and filename into `fileName` for `telegramusers` table.
+- `sharedData` outer export is updated with buffer, id and fileName (server-side).
 
-* **GET `/api/user-resumes/fetchRecommendations/:id`** – *Get ATS improvement tips.*
+---
 
-  * **Route Parameters:** `id` is the document ID of the resume (the same `documentId` saved earlier).
-  * **Function:** The server analyzes the specified resume (by ID) and returns suggestions to improve the ATS score (e.g., add keywords, reformat sections).
-  * **Response:** Likely a JSON with an array of recommendation strings or tips.
+### 2. Create Resume entry
+**POST** `/api/user-resumes`
 
-### Telegram Bot Routes (Optional)
+**Description:** Inserts a row into `resume` table with (`title`, `documentId`, `userEmail`, `userName`) using `req.body.data`. Important: due to how the code is written, the response sent is a fixed object declared before the DB insertion (see below).
 
-These endpoints are used by the **Kenshi Resumes Telegram Bot** to deliver resumes to users on Telegram. They are not needed by the web frontend, but are documented for completeness.
+**Request headers:**
+```
+Content-Type: application/json
+```
 
-* **POST `/api/user-resumes/upload/:id/:teleUser`** – *Send resume to Telegram user.*
+**Request body (expected by insertion):**
+```json
+{
+  "data": {
+    "title": "Software Engineer Resume",
+    "documentId": 12345,
+    "userEmail": "john@example.com",
+    "userName": "John Doe"
+  }
+}
+```
 
-  * **Route Parameters:** `id` (document ID of resume), `teleUser` (Telegram user ID or chat).
-  * **Function:** Triggered by the bot when a user requests their resume. The server fetches the resume by ID, then uses the Telegram Bot API to send the resume file to the given user.
-  * **Response:** Likely a status message indicating success/failure.
+**Behavior & responses (per code):**
 
-Each endpoint returns standard HTTP status codes (200 for success, 4xx for client errors, etc.). As no authentication is enforced, the backend trusts the provided `userEmail`, `documentId`, etc. In a production scenario, you might add token checks (e.g. JWT in headers) to protect these routes.
+- The server attempts to `INSERT INTO resume (title, "documentId", "userEmail", "userName")` using `req.body.data` values.
 
-For reference, see the API spec from the README.
+- **Response sent by the code:** the function returns the pre-declared `data` object:
+  ```json
+  {
+    "data": {
+      "documentId": 1
+    }
+  }
+  ```
+  This is because there is an outer `const data = { data: { documentId: documentId } }` (which is `1`) and an inner `const data = req.body.data` inside the `try` block; the inner one is block-scoped and the `res.send(data)` outside the try refers to the outer `data`. Therefore, **the response is always `{ "data": { "documentId": 1 } }`** per the current code, regardless of the inserted values. (The DB insert still runs using `req.body.data`.)
+
+- If DB insertion throws, the code logs the error; no error response is explicitly returned (client will still receive the outer `data` response unless the server crashes).
+
+---
+
+### 3. Get All Resumes (by user email)
+**GET** `/api/user-resumes?userEmail=<email>`
+
+**Description:** Fetches all rows from `resume` table where `"userEmail" = $1` (value from query param). Response is JSON with `data` key containing DB rows.
+
+**Query params:**
+- `userEmail` — the email used to filter resumes (required)
+
+**Response (success):** `200 OK` with JSON:
+```json
+{
+  "data": [
+    {
+      "id": <db id>,
+      "title": "...",
+      "documentId": ...,
+      "userEmail": "...",
+      "userName": "...",
+      // other columns present in the resume table row
+    }
+    // ...more rows
+  ]
+}
+```
+
+**Failure:** On DB error, server logs error and responds:
+- **Status:** `500 Internal Server Error`
+- **Body (plain text):** `Error fetching data from database`
+
+---
+
+### 4. Get Resume with Details (experience, education, skills)
+**GET** `/api/user-resumes/:id?populate=*`
+
+**Description:** When `populate=*` query is present exactly, the route fetches the `resume` row for given `documentId` and then loads related `experience`, `education`, and `skills` rows for that `documentId`. It transforms DB columns that are arrays (in the DB) into structured arrays of objects in the response.
+
+**Path params:**
+- `:id` — the `documentId` to fetch
+
+**Query params:**
+- `populate` — must be exactly `*` to return populated data; otherwise the handler responds with an error (see below).
+
+**Response (success) — structure produced by code:**
+```json
+{
+  "data": {
+    // fields from the resume row (as returned by DB), for example:
+    "documentId": 12345,
+    "title": "Software Engineer Resume",
+    "summery": "Experienced dev...",
+    // plus three populated arrays:
+    "Experience": [
+      {
+        "title": "...",
+        "companyName": "...",
+        "city": "...",
+        "state": "...",
+        "startDate": "...",
+        "endDate": "...",
+        "workSummery": "..."
+      }
+      // ... for each experience entry
+    ],
+    "education": [
+      {
+        "degree": "...",
+        "university": "...",
+        "major": "...",
+        "startDate": "...",
+        "endDate": "...",
+        "description": "..."
+      }
+      // ... for each education entry
+    ],
+    "skills": [
+      {
+        "name": "...",
+        "rating": "..."
+      }
+      // ... for each skill entry
+    ]
+  }
+}
+```
+
+**Failure cases:**
+- If `populate` query is missing or not exactly `*`:
+  - **Status:** `500 Internal Server Error`
+  - **Body (plain text):** `No populate query found`
+
+- If DB fetching fails for any query, code logs the error and sends:
+  - **Status:** `500 Internal Server Error`
+  - **Body (plain text):** `Error fetching data from database`
+
+**Notes about transformation logic:**
+- `experience`, `education`, and `skills` rows are expected to have array columns (`title`, `companyName`, `startDate`, etc.). The code iterates the arrays and builds a list of objects per entry.
+
+---
+
+### 5. Update Resume Section
+**PUT** `/api/user-resumes/:id`
+
+**Description:** Updates one of several sections of a resume based on `req.body.section`. The handler expects `req.body.data` containing the data for that section and `req.params.id` for `documentId`. After performing DB updates/inserts, the handler responds by echoing the entire `req.body`.
+
+**Request headers:**
+```
+Content-Type: application/json
+```
+
+**Request body – required fields:**
+```json
+{
+  "section": "<one of: summery, personalDetails, experience, education, skills, (otherwise theme color)>",
+  "data": { ... } 
+}
+```
+
+**Supported `section` values and required `data` shapes (as used by code):**
+
+- `summery`  
+  - `data` object must contain `summery` string.  
+  - DB query: `UPDATE resume SET "summery" = $1 WHERE "documentId" = $2`
+
+  **Example request body:**
+  ```json
+  {
+    "section": "summery",
+    "data": { "summery": "Experienced full-stack developer..." }
+  }
+  ```
+
+- `personalDetails`  
+  - `data` must contain `firstName`, `lastName`, `jobTitle`, `address`, `phone`, `email`.  
+  - DB query updates corresponding columns in `resume` table.
+
+  **Example:**
+  ```json
+  {
+    "section": "personalDetails",
+    "data": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "jobTitle": "Software Engineer",
+      "address": "Lucknow, India",
+      "phone": "+91 9876543210",
+      "email": "john@example.com"
+    }
+  }
+  ```
+
+- `experience`  
+  - `data` shape per code: `{ "Experience": [ { title, companyName, city, state, startDate, endDate, workSummery }, ... ] }`  
+  - The handler extracts arrays from the provided `Experience` array and writes them into the `experience` table as array columns. It either `UPDATE`s an existing `experience` row for the `documentId` or `INSERT`s a new row and then updates it.
+
+  **Example:**
+  ```json
+  {
+    "section": "experience",
+    "data": {
+      "Experience": [
+        {
+          "title": "Software Engineer",
+          "companyName": "Tech Corp",
+          "city": "Mumbai",
+          "state": "MH",
+          "startDate": "2022-06-01",
+          "endDate": "2024-06-01",
+          "workSummery": "Worked on APIs..."
+        }
+      ]
+    }
+  }
+  ```
+
+- `education`  
+  - `data` shape: `{ "education": [ { degree, university, major, startDate, endDate, description }, ... ] }`  
+  - The handler converts these into parallel arrays and updates/inserts into `education` table.
+
+  **Example:**
+  ```json
+  {
+    "section": "education",
+    "data": {
+      "education": [
+        {
+          "degree": "B.Tech",
+          "university": "Amity University",
+          "major": "CSE",
+          "startDate": "2022",
+          "endDate": "2026",
+          "description": "High GPA"
+        }
+      ]
+    }
+  }
+  ```
+
+- `skills`  
+  - `data` shape: `{ "skills": [ { name, rating }, ... ] }`  
+  - Handler converts to `name[]` and `rating[]` arrays and updates/inserts into `skills` table.
+
+  **Example:**
+  ```json
+  {
+    "section": "skills",
+    "data": {
+      "skills": [
+        { "name": "JavaScript", "rating": 5 },
+        { "name": "React", "rating": 4 }
+      ]
+    }
+  }
+  ```
+
+- **Fallback (theme color)**  
+  - If `section` is none of the above, code treats the request as themeColor update. It expects `data.themeColor` and runs:  
+    `UPDATE resume SET "themeColor" = $1 WHERE "documentId" = $2`
+
+  **Example:**
+  ```json
+  {
+    "section": "theme",
+    "data": { "themeColor": "#6EE7B7" }
+  }
+  ```
+
+**Response (per code):** server returns the exact `req.body` as-is:
+- **Status:** `200 OK` (implied)
+- **Body:** the same JSON object sent in the request (echo).  
+  Example echo response for a skills update will be the same JSON as the request body above.
+
+**Errors:** On DB error the code logs error; no explicit error payload is returned by the handler (it still ends with `res.send(req.body)` irrespective of success/failure).
+
+---
+
+### 6. Delete Resume and related rows
+**DELETE** `/api/user-resumes/:id`
+
+**Description:** Deletes rows matching `documentId` from `resume`, `experience`, `education`, `skills`, and `telegramusers` tables.
+
+**Path params:**
+- `:id` — `documentId` to delete
+
+**Success response:**
+- **Status:** `200 OK`
+- **Body (plain text):** (exact string)
+  ```
+  Document deleted successfully with id <id>
+  ```
+
+**Failure:** If any DB error occurs:
+- **Status:** `500 Internal Server Error`
+- **Body (plain text):** `Error deleting data from database`
+
+---
+
+### 7. Upload Resume for ATS processing
+**POST** `/api/user-resumes/ats/:id`
+
+**Description:** Uploads file (field `files`), stores buffer into shared data via `setBuffer()` and calls `fetchATS()` (imported from `flashAI.js`). After calling `fetchATS()` the route responds with a plain-text message.
+
+**Request headers:**
+```
+Content-Type: multipart/form-data
+```
+
+**Request body (multipart):**
+- `files` — uploaded file
+
+**Response:**
+- **Status:** `200 OK`
+- **Body (plain text):**  
+  ```
+  ATS score fetched successfully with id <id>
+  ```
+
+**Note:** `fetchATS()` runs asynchronously and the route does not wait for a separate result besides awaiting the function call — the actual ATS results are later available via `GET /api/user-resumes/fetchScore/:id` which reads `dataForAts` exported from `sharedData.js`.
+
+---
+
+### 8. Fetch ATS Score
+**GET** `/api/user-resumes/fetchScore/:id`
+
+**Description:** Waits until `dataForAts.fetched` becomes truthy, then returns the `score` and `fetched` flags from `dataForAts` object (imported from `sharedData.js`). The route polls every 3 seconds while waiting.
+
+**Path params:**
+- `:id` — passed but not used to index the stored `dataForAts` in code; response uses global `dataForAts` object.
+
+**Response (per code):**
+- **Status:** `200 OK`
+- **Body (JSON):**
+  ```json
+  {
+    "score": <dataForAts.score>,
+    "fetched": <dataForAts.fetched>
+  }
+  ```
+  Example if `dataForAts.score` is `78` and `fetched` is `true`:
+  ```json
+  { "score": 78, "fetched": true }
+  ```
+
+**Notes:** The code polls until `dataForAts.fetched` is `true`. There is no timeout in the handler; a long wait will keep the request open until the flag changes.
+
+---
+
+### 9. Fetch Recommendations
+**GET** `/api/user-resumes/fetchRecommendations/:id`
+
+**Description:** Waits until `dataForAts.fetched` is true, then calls `fetchRecommendations()` (which populates the exported `recommendations` variable from `flashRecommendations.js`) and returns that `recommendations` array in JSON.
+
+**Path params:**
+- `:id` — accepted but not used to select which recommendations to return; the handler returns the module-level `recommendations` value.
+
+**Response:**
+- **Status:** `200 OK`
+- **Body (JSON):**
+  ```json
+  {
+    "recommendations": [ /* contents of imported `recommendations` array */ ]
+  }
+  ```
+
+**Notes:** The endpoint calls `await fetchRecommendations()` after waiting for `dataForAts.fetched`, so it triggers generation/refresh of `recommendations` before returning them.
+
+---
+
+### 🔟 Submit Feedback
+**POST** `/api/feedbacks`
+
+**Description:** Pushes `req.body` into the server in-memory `feedback` array (exported) if present, and responds with a plain text confirmation.
+
+**Request headers:**
+```
+Content-Type: application/json
+```
+
+**Request body:** any JSON object representing feedback. Example:
+```json
+{
+  "rating": 5,
+  "feedback": "Amazing resume builder!"
+}
+```
+
+**Response (per code):**
+- **Status:** `200 OK`
+- **Body (plain text):**  
+  ```
+  Feedback received successfully
+  ```
+
+**Notes:** `feedback` array begins with a default entry:
+```json
+[
+  {
+    "rating": -1,
+    "feedback": "No ratings given yet!"
+  }
+]
+```
+New feedback items are `push`ed into that array in memory (not persisted to DB).
+
+---
+
+### 1️⃣1️⃣ Get All Feedbacks
+**GET** `/api/feedbacks`
+
+**Description:** Returns the server in-memory `feedback` array as JSON.
+
+**Response:**
+- **Status:** `200 OK`
+- **Body (JSON):** current `feedback` array, e.g.
+```json
+[
+  { "rating": -1, "feedback": "No ratings given yet!" },
+  { "rating": 5, "feedback": "Amazing resume builder!" }
+]
+```
+
+---
+
+## Root / Static route
+**GET** `/` (no `/api` prefix) — Serves `public/index.html` using `res.sendFile(__dirname + "/public/index.html")`.
+
+---
+
+## Implementation notes & future improvement-(AFTER REVIEW BY DEVELOPERS)
+- Several handlers return plain text strings (e.g. upload success, delete success, ATS upload success, feedback confirmation) — they are **not JSON** unless explicitly using `res.json`. Keep that in mind if a client expects JSON.  
+- `POST /api/user-resumes` responds with a fixed `{ "data": { "documentId": 1 } }` due to how variables are scoped in the handler (outer `data` object is sent). This behavior is faithful to the provided code.  
+- `GET /api/user-resumes/fetchScore/:id` and `/fetchRecommendations/:id` rely on module-level state (`dataForAts` and `recommendations`) — the routes wait (poll) until `dataForAts.fetched` is true. There is no per-user documentId mapping in these handlers: they return the module-level values.  
+- Error paths often just log and return generic text or HTTP 500; consider adding consistent JSON error payloads in future for API clarity.
+
+---
+
+# AI Model Modules 
+
+> This document describes the AI-related modules implemented in the backend logic.
+
+---
+
+## Environment
+- **Required environment variable:** `GOOGLE_API_KEY`  
+  The code instantiates `new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY })`. If this variable is missing or invalid, the Google GenAI client will not authenticate correctly.
+
+---
+
+## Files & Modules Covered
+- `flashAI.js` — Generates an ATS score using Google GenAI and sets it via `setScore`.
+- `flashRecommendations.js` — Generates resume improvement recommendations using Google GenAI and exports `recommendations`.
+- `sharedData.js` — Shared state between modules: `dataForAts`, `setBuffer(buffer)`, `setScore(score)`.
+
+---
+
+## 1) `flashAI.js` (AI ATS scorer)
+
+### Exports / API
+- **Default export:** `async function main()` — when invoked it:
+  - reads `dataForAts.buffer`
+  - if buffer is null -> logs error and returns
+  - otherwise constructs `contents` for `ai.models.generateContent()` and calls the Google GenAI client
+  - cleans the returned `response.text`, parses it as JSON, reads `ats_score`, and calls `setScore(score)`.
+
+### Important code behavior
+- `const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });`
+- `const pdfResp = dataForAts.buffer;`
+  - If `pdfResp === null`, the function logs `"Buffer is null. Buffer not intialized yet."` and `return`s.
+- `contents` is an array with two elements:
+  1. A `text` item containing the instruction:
+     ```
+     Give ats score for the resume returning a json(not markdown) as follows and do not say anything else.
+     {
+     "ats_score": ats score in percentage
+     }
+     ```
+  2. An `inlineData` object:
+     ```js
+     {
+       inlineData: {
+         mimeType: 'application/pdf',
+         data: Buffer.from(pdfResp).toString("base64")
+       }
+     }
+     ```
+- The code calls:
+  ```js
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: contents
+  });
+  ```
+- Post-processing:
+  - `response.text` is cleaned by removing any occurrences of "```json" or "```" via `response.text.replace(/```json|```/g, '').trim();`
+  - The function uses `JSON.parse(cleaned)` (exactly) and expects the result to be an object with an `ats_score` property.
+  - It logs `JSON.parse(cleaned)` and then `console.log("ATS score:", score.ats_score);`
+  - Finally calls `setScore(score.ats_score);`
+
+### Expected AI output format (required by the code)
+The AI `response.text` must contain valid JSON (possibly wrapped in code fences). After removing code fences the string must parse to:
+```json
+{
+  "ats_score": <number>
+}
+```
+The code will parse this and pass the numeric `ats_score` value to `setScore()`.
+
+### Error handling & notes for future improvements (AFTER REVIEW BY DEVELOPERS)
+- If the AI returns malformed JSON that cannot be parsed by `JSON.parse`, the code will throw and crash unless the exception is caught elsewhere. The code does not wrap `JSON.parse` in a `try/catch` in the snippet you provided.
+- The `main()` function is **not** invoked automatically in the file (it’s commented out). It must be imported and called by another module (e.g., the server) to run.
+
+---
+
+## 2) `flashRecommendations.js` (AI recommendations generator)
+
+### Exports / API
+- **Default export:** `async function main()` — when invoked:
+  - reads `dataForAts.buffer`
+  - if buffer is null -> logs error and returns
+  - otherwise constructs `contents` for `ai.models.generateContent()` and calls the Google GenAI client
+  - processes `response.text` into a cleaned `recommendations` string (module-level)
+- **Named export:** `export { recommendations }` — `recommendations` is a module-level `let` that holds the cleaned `response.text`.
+
+### Important code behavior 
+- `const ai = new GoogleGenAI({ apiKey: process.env.GOOGLE_API_KEY });`
+- `let recommendations = '';` (module-level variable)
+- The function constructs `contents`:
+  1. A `text` item: `"Give recommendations to improve this resume's ATS Scores."`
+  2. An `inlineData` object with the PDF buffer base64 identical to `flashAI.js`.
+- Calls:
+  ```js
+  const response = await ai.models.generateContent({
+    model: "gemini-2.0-flash",
+    contents: contents
+  });
+  ```
+- Post-processing of `response.text` (exact sequence):
+  1. `console.log(response.text);`
+  2. `recommendations = response.text`
+     - `.replace(/\*\*(.*?)\*\*/g, (_, text) => text.toUpperCase())`
+     - `.replace(/\*(.*?)\*/g, (_, text) => text)`
+     - `.replace(/
+?
+{2,}/g, '
+
+')`
+     - `.replace(/[\`#_>~]/g, '')`
+     - `.trim();`
+- The `recommendations` variable holds the final cleaned string and is exported.
+
+### Expected AI output format
+- The code treats the AI reply as plain text (not JSON). The reply can be in Markdown or plain text; the code attempts to clean Markdown-like characters and normalize spacing. The final exported `recommendations` is a string.
+
+### Error handling & notes for future improvements(AFTER REVIEW BY DEVELOPERS)
+- If `dataForAts.buffer` is `null`, the function logs `"Buffer is null for recommendations. Buffer not intialized yet."` and returns.
+- The `main()` function is **not** invoked automatically (commented out). Another module must import and call it.
+- The code does not validate or parse the AI text into structured JSON — it leaves `recommendations` as a cleaned string.
+
+---
+
+## 3) `sharedData.js` (shared state)
+
+### Exports / API (exact)
+- **Exported object:** `export let dataForAts = { buffer: null, score: 0, fetched: false };`
+- **Exported function:** `export function setBuffer(buffer)`  
+  - Sets `dataForAts.buffer = buffer;`
+  - Resets `dataForAts.score = 0;`
+  - Sets `dataForAts.fetched = false;`
+- **Exported function:** `export function setScore(score)`  
+  - Sets `dataForAts.score = score;`
+  - Sets `dataForAts.fetched = true;`
+
+### Behavior 
+- `dataForAts` is a shared module-level object used by both AI modules and the server.
+- Typical flow intended by the code:
+  1. Some code (e.g., server route) calls `setBuffer()` with a PDF buffer (from upload).
+  2. `flashAI.main()` reads `dataForAts.buffer`, generates an ATS score, and calls `setScore()`.
+  3. `dataForAts.fetched` becomes `true` and `dataForAts.score` holds the ATS numeric score.
+  4. Other parts of the server poll or read `dataForAts` (for example `GET /api/user-resumes/fetchScore/:id` waits for `dataForAts.fetched`).
+
+### Notes & caveats (AFTER REVIEW BY DEVELOPERS)
+- `dataForAts` is process-global per Node process. It is **not** persisted across restarts.
+- No concurrency locks or queuing are implemented — if multiple buffers are set concurrently, the last one wins.
+- `setBuffer()` resets `score` and `fetched` to initial values; callers must wait for `setScore()` to be called to see `fetched: true`.
+
+---
+
+## Usage summary 
+- The server sets the PDF buffer via `setBuffer(req.file.buffer)` (server code does this in `/api/user-resumes/ats/:id`).
+- After `setBuffer()` the server calls `await fetchATS()` (which is the default export of `flashAI.js`) — this triggers the GenAI call and eventually `setScore()`.
+  - In your server code:  
+    ```js
+    setBuffer(req.file.buffer);
+    await fetchATS();
+    ```
+- Later, server route `GET /api/user-resumes/fetchScore/:id` polls `dataForAts.fetched` and returns `dataForAts.score` and `dataForAts.fetched` as JSON (server code handles this).
+- For recommendations, the server calls `await fetchRecommendations()` (default export of `flashRecommendations.js`) and then returns the exported `recommendations` array/string.
+
+---
+
+## Implementation caveats & exact behavior to be aware of (AFTER REVIEW BY DEVELOPERS)
+- **AI response parsing is strict in `flashAI.js`:** the code expects JSON text that parses to an object with `ats_score`. The code will `JSON.parse` without try/catch.
+- **`flashRecommendations.js` returns a plain string:** the server returns `recommendations` as whatever cleaned text the AI returned — there is no structure enforced.
+- **No per-document mapping in `sharedData`:** `dataForAts` is a single global buffer/score. The `:id` path params in server endpoints are not used to index multiple `dataForAts` objects.
+- **Both `main()` functions are not auto-executed** (their `main()` calls are commented out in the provided snippets). They must be invoked by the server or another orchestrator to run.
+
+---
+
+## Exact strings logged / expected messages
+- `"Buffer is null. Buffer not intialized yet."` — from `flashAI.js` when buffer is null
+- `"Buffer is null for recommendations. Buffer not intialized yet."` — from `flashRecommendations.js` when buffer is null
+- The server code prints `"ATS score:"` and the numeric value after parsing in `flashAI.js`.
+
+---
+
+# Telegram Bot
+
+> This document describes the Telegram bot module implemented in the backend logic.
+---
+
+## Environment
+- **Required environment variable:** `TELEGRAM_BOT_TOKEN`  
+  The bot is instantiated with:
+  ```js
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const bot = new TelegramBot(token, { polling: true });
+  ```
+
+---
+
+## Main behavior & listeners
+
+### 1) `bot.onText(/\greet/, (msg, match) => { ... })`
+
+**Description:**
+- The code registers an `onText` handler using the regular expression literal `/\greet/`.
+- Inside the handler:
+  - `const chatId = msg.chat.id;`
+  - `const resp = match[1];`  // `match[1]` is used
+  - Sends a reply:
+    ```js
+    bot.sendMessage(chatId, "Hello, I am your bot! How can I assist you today?
+Answered to:" + resp);
+    ```
+
+**Notes & caveats (AFTER REVIEW BY DEVELOPERS):**
+- The regex `/\greet/` does not contain a capture group (i.e., there is no `( ...)` group), so `match[1]` will be `undefined` unless the regex engine or node-telegram-bot-api provides a different `match` shape. The code uses `match[1]` directly — the resulting `resp` may therefore be `undefined`.
+- The regex literal includes a backslash before `g` (`\g`) which is not a standard escape sequence; depending on JS engine it may be interpreted as `g` or cause unexpected behavior. This is a factual observation of the code — the code does not alter the regex.
+
+---
+
+### 2) `bot.onText(/\/sendpdf/, async (msg, match) => { ... })`
+
+**Description:**
+- Handler activated when incoming text matches `/\/sendpdf/` (a literal `/sendpdf` command).
+- Steps performed (per code):
+  1. `const chatId = msg.chat.id;`
+  2. `const userName = msg.from.username;`
+  3. Logs `sharedData`.
+  4. Executes DB query:
+     ```js
+     const result = await db.query(`SELECT * FROM telegramusers WHERE "userName" = $1`, [userName]);
+     ```
+  5. If `result.rows.length > 0`, the code iterates `result.rows.forEach((row) => { ... })` and for each `row`:
+     - `const pdfData = row.pdf;` (assigned as `const`)
+     - Checks:
+       ```js
+       if (!Buffer.isBuffer(pdfData)) {
+           console.log("pdfData is not a buffer. Converting...");
+           pdfData = Buffer.from(pdfData, 'binary');
+       }
+       ```
+     - Sends document:
+       ```js
+       bot.sendDocument(chatId, pdfData, {
+           caption: 'Here is your AI-generated Resume!',
+       }, {
+           filename: row.fileName,
+           contentType: 'application/pdf',
+       })
+       .catch((error) => {
+           console.error('Error sending document:', error);
+           bot.sendMessage(chatId, 'Sorry, there was an error sending the PDF.');
+       });
+       ```
+  6. If no rows found, sends:
+     ```js
+     bot.sendMessage(chatId, 'Sorry, no records found!');
+     ```
+  7. If DB query throws, `catch` block logs error and sends:
+     ```js
+     bot.sendMessage(chatId, 'Sorry, you are not authorized to access this document.');
+     ```
+
+**Notes & exact caveats visible in code:(AFTER REVIEW BY DEVELOPERS)**
+- `pdfData` is declared with `const pdfData = row.pdf;` and later reassigned with `pdfData = Buffer.from(...)` inside the `if` block. Reassigning a `const` will throw a runtime `TypeError` (`Assignment to constant variable`) — this would crash the handler at runtime unless changed to `let`. The code as written performs this reassignment.
+- The `Buffer.isBuffer(pdfData)` check is present; if `row.pdf` is not a Buffer (for example a binary string), the code attempts to convert it to a Buffer (but due to `const` it will error as described).
+- `bot.sendDocument` is called with four arguments in the code: `(chatId, pdfData, { caption }, { filename, contentType })`. The node-telegram-bot-api `sendDocument` signature usually expects `(chatId, doc, options)` where `options` may include `caption` and `filename`. The code supplies two separate option objects — the code will pass these literally to the library as written; behavior depends on the library's parameter handling.
+- The database query uses `userName` taken from `msg.from.username`. If `username` is `undefined` (user hasn't set a Telegram username), the query will run with `[undefined]` and likely return no rows.
+
+---
+
+### 3) `bot.on('message', (msg) => { ... })`
+
+**Description (exact):**
+- Listens for any incoming message.
+- Inside handler:
+  - `const chatId = msg.chat.id;`
+  - Logs the message: `console.log("Response from user", msg);`
+  - Sends a fixed reply:
+    ```js
+    bot.sendMessage(chatId, 'Hello,Kenshin Commander reporting! Have a pathetic day baby!');
+    ```
+
+**Notes:**
+- The reply string is exactly as in code and will be sent for every message received (including commands) unless other handlers intercept earlier. The string contains wording that may be considered informal; documentation records the exact text.
+
+---
+
+## Permissions & setup notes 
+- Bot uses **polling** (not webhooks):
+  ```js
+  const bot = new TelegramBot(token, { polling: true });
+  ```
+- Ensure `TELEGRAM_BOT_TOKEN` is set in environment before running.
+
+---
+
+## Potential runtime issues — exact observations from code(AFTER REVIEW BY DEVELOPERS)
+- Reassigning `const pdfData` will throw at runtime when `row.pdf` is not already a Buffer and the conversion code attempts `pdfData = Buffer.from(...)`.
+- `bot.onText(/\greet/, ...)` uses `match[1]` though the regex has no capture group — `resp` will likely be `undefined`.
+- `bot.sendDocument` invocation uses two option objects; depending on the bot library's implementation this may or may not behave as intended.
+- The DB query and document send assume `userName` exists in `msg.from.username`; if absent, the query may find no rows.
+
+---
+
+## Exact strings logged / sent by the bot 
+- Logged: `console.log("received data--->", sharedData);` (in sendpdf handler)
+- Sent as reply in greet handler:
+  ```
+  Hello, I am your bot! How can I assist you today?
+  Answered to: <resp>
+  ```
+  (where `<resp>` equals `match[1]` per code; possibly `undefined`.)
+- Sent when sending a PDF: caption `'Here is your AI-generated Resume!'`
+- Sent on DB error or no records: `'Sorry, no records found!'` or `'Sorry, you are not authorized to access this document.'`
+- Default message for any message:  
+  ```
+  Hello,Kenshin Commander reporting! Have a pathetic day baby!
+  ```
+
+---
+
+## Recommendation (code-level) — purely informational(AFTER REVIEW BY DEVELOPERS)
+> The following suggestions are *observations* based on the exact code and are provided only to help avoid runtime errors if you decide to modify the code:
+> - Change `const pdfData = row.pdf;` to `let pdfData = row.pdf;` before attempting to reassign it.
+> - Use a regex with a capture group when you intend to access `match[1]`, for example `/\/greet (.+)/` (if you actually want a captured parameter), or use the provided `msg.text` directly.
+> - Consolidate `sendDocument` options into a single options object as the library expects, for example:
+>   ```js
+>   bot.sendDocument(chatId, pdfData, { caption: '...', filename: row.fileName, contentType: 'application/pdf' })
+>   ```
+> These changess may be applied to the current code in future — only suggestions after review are mentioned.
+
+---
+
 
 ## Frontend Components & Interactions
 
@@ -254,9 +1033,11 @@ Follow these steps to set up the project locally for development (each repo must
 
 Now you can use the app locally. When you click “Generate,” the frontend will call the local backend and populate the resume.
 
-## Deployment
+---
 
-### Frontend (Vercel)
+# Deployment
+
+# Frontend (Vercel)
 
 Kenshi Resumes frontend is designed for deployment on **Vercel**, an end-to-end platform for hosting and deploying web applications. To deploy:
 
@@ -268,20 +1049,129 @@ Kenshi Resumes frontend is designed for deployment on **Vercel**, an end-to-end 
 
 Vercel supports real-time previews for pull requests and handles HTTPS certificates automatically. It can be configured via the [vercel.json](https://vercel.com/docs) file included in the repo.
 
-### Backend (Railway)
+# Backend (Render)
 
-The backend can be deployed on **Railway**, a cloud platform for application deployment. Steps:
+## Render Deployment & CORS Patch — 
 
-1. Push the backend code to GitHub.
-2. Sign up at Railway (free tier available) and create a new project.
-3. Connect the GitHub repo. Railway will detect the Node.js project and install dependencies.
-4. In Railway, add a PostgreSQL plugin or set `DATABASE_URL` to your database. Railway can provision a managed Postgres instance, and will set the `DATABASE_URL` environment variable for you.
-5. Add environment variables in Railway (GEMINI\_API\_KEY, TELEGRAM\_BOT\_TOKEN if needed).
-6. Deploy: Railway will build and start the app (e.g. running `npm start`). It provides a public URL like `https://yourapp.up.railway.app`.
+---
 
-Railway supports continuous deployment (push to GitHub → auto-deploy), environment management (storing API keys), and includes features like automatic SSL. This matches Kenshi Resumes’ needs for zero-downtime hosting and easy updates.
+## Part A — CORS patch (ready to paste)
 
-> **Tip:** The backend repo’s README (see *Steps.txt*) may contain additional deployment notes. Ensure that the `queries.sql` is run on the Railway Postgres instance (you can use the Railway console or PGAdmin).
+Below is a small code patch you can paste into your backend entry file (the file that contains your Express `app` and `app.use(cors(...))` call). It adds your Render service URL via an environment variable `RENDER_URL` while keeping existing allowed origins. Paste the replacement block **in place of** the existing `app.use(cors({ ... }))` block in your code.
+
+```diff
+--- original
+-app.use(cors({
+-    origin: ['https://kenshi-resumes-ai-powered.vercel.app', 'https://www.kenshi-res.app'],
+-    // origin: 'http://localhost:5173', // origins for development
+-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+-    allowedHeaders: ['Content-Type', 'Authorization'],
+-    //   credentials: true, // if using cookies/auth headers
+-})); // Allow cross-origin requests
++// Allow CORS from known frontends and the Render backend URL (if provided)
++// Add RENDER_URL as an environment variable on Render (e.g. https://your-backend.onrender.com)
++const allowedOrigins = [
++  process.env.RENDER_URL, // Render service URL (set this in Render's Environment settings)
++  'https://kenshi-resumes-ai-powered.vercel.app',
++  'https://www.kenshi-res.app'
++].filter(Boolean); // remove any undefined/empty values
++
++app.use(cors({
++    origin: allowedOrigins,
++    // origin: 'http://localhost:5173', // uncomment during local development if needed
++    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
++    allowedHeaders: ['Content-Type', 'Authorization'],
++    // credentials: true, // enable if you use cookies/auth headers
++})); // Allow cross-origin requests
+```
+
+**Notes:**
+- Set an environment variable `RENDER_URL` in Render to your service URL (e.g. `https://your-backend.onrender.com`). The patch reads `process.env.RENDER_URL` at runtime.
+- The `.filter(Boolean)` ensures `undefined` or empty values are removed so CORS doesn't get `[""]` as an origin.
+- After pasting, redeploy on Render so the new CORS origins take effect.
+- If your code file uses `app.use(express.static('public'))` and other middleware order matters, keep this replacement in the same place as the original `app.use(cors(...))` line (do not move it above `app.use(express.static())` if you relied on the previous order).
+
+---
+
+## Part B — Render deployment checklist (fill secrets in Render dashboard)
+
+This checklist helps you deploy or update the Kenshi Resumes backend on **Render**, and includes exact environment variable names your code expects.
+
+### 1. Repo & Service
+- Push your backend code to GitHub (branch you want to deploy).
+- In Render dashboard: create a new Web Service and connect the GitHub repo, then select the branch to deploy.
+- Build command: `npm install` (or your preferred installer).
+- Start command: `npm start` (or `node index.js` / `node server.js` depending on your repo).
+
+### 2. Required environment variables (add these under the service's Environment in Render)
+- `DB_USER` — Postgres username (from managed DB)  
+- `DB_HOST` — Postgres host  
+- `DB_NAME` — Postgres database name  
+- `DB_PASSWORD` — Postgres password  
+- `DB_PORT` — Postgres port (usually `5432`)  
+- `TELEGRAM_BOT_TOKEN` — Telegram bot token (if using bot features)  
+- `GOOGLE_API_KEY` — Google GenAI API key (AI modules)  
+- `PORT` — (optional) Render sets `$PORT` automatically; you can leave this unset  
+- `RENDER_URL` — (recommended) the public Render URL for this service (e.g. `https://your-backend.onrender.com`). Used by the CORS patch.  
+
+**Important:** Your code reads individual DB env vars (not `DATABASE_URL`). Set them exactly as listed above.
+
+### 3. Managed Postgres (optional but recommended)
+- In Render: create a managed PostgreSQL instance.
+- After creation, copy the DB connection values into the service environment variables listed above.
+- Run your database schema (`queries.sql`) against the Render Postgres instance. Use Render's database connection info and any client (psql, pgAdmin, DBeaver). Example `psql` command:
+```bash
+psql -h <DB_HOST> -U <DB_USER> -d <DB_NAME> -p <DB_PORT> -f queries.sql
+```
+- Verify tables: `resume`, `experience`, `education`, `skills`, `telegramusers` exist and columns match your queries file.
+
+### 4. CORS setup
+- Add `RENDER_URL` env var (your Render service URL) so the code's allowed origins include it (see Part A above). Alternatively, open the allowed origin list inline in code before deployment.
+- If you have multiple frontend origins, list them in the code's allowedOrigins or use an env var like `ALLOWED_ORIGINS` (comma-separated) and parse it in code:
+```js
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || '').split(',').map(s => s.trim()).filter(Boolean);
+```
+
+### 5. Telegram bot & AI modules
+- Ensure `TELEGRAM_BOT_TOKEN` and `GOOGLE_API_KEY` are set. Bot uses polling; Render processes keep-alive are needed — Render supports background workers, but polling in a web service may still work. Monitor for long-term stability (webhooks are more robust for bots in production).
+- Verify the AI modules can access `process.env.GOOGLE_API_KEY` at runtime.
+
+### 6. Deployment & verification
+- Enable Auto-Deploy (optional): Render can auto-deploy on Git push to the connected branch.
+- After deploy, Render exposes a public URL like `https://your-backend.onrender.com`.
+- Test endpoints (replace `<URL>` with your Render URL):
+  - `GET https://<URL>/` → Should return your `public/index.html` content.
+  - `GET https://<URL>/api/user-resumes?userEmail=<email>` → returns JSON array
+  - `POST https://<URL>/api/user-resumes/upload/:id/:teleUser` (multipart/form-data) → test upload
+  - `POST https://<URL>/api/user-resumes/ats/:id` (multipart/form-data) → triggers AI processing (requires GOOGLE_API_KEY)
+  - `GET https://<URL>/api/user-resumes/fetchScore/:id` → returns `{ score, fetched }`
+  - `GET https://<URL>/api/user-resumes/fetchRecommendations/:id` → returns `{ recommendations }`
+  - `POST https://<URL>/api/feedbacks` → test feedback push
+  - `GET https://<URL>/api/feedbacks` → returns current feedback array
+
+### 7. Debugging tips
+- Use Render logs (service dashboard) to view console output (e.g., DB connection logs, AI model logs, bot logs).
+- If DB connection fails, confirm `DB_HOST` and `DB_PORT`. If you use SSL, the `pg.Client` in your code already sets `ssl: { rejectUnauthorized: false }`.
+- If `fetchScore` endpoint hangs, check that `flashAI` actually sets `dataForAts.fetched = true` and that `GOOGLE_API_KEY` is valid and allowed to call the model.
+- For Telegram bot polling issues, ensure the bot token is correct and there are no constraints on Render’s execution model (consider running the bot in a dedicated background worker or switch to webhooks).
+
+### 8. Post-deploy (optional)
+- Set up monitoring/alerts in Render for service errors.
+- Add a health-check endpoint if you want automatic restarts on failures.
+
+---
+
+## Quick checklist to paste in Render service notes
+- [ ] Push code to GitHub branch
+- [ ] Create Web Service in Render
+- [ ] Create/Postgres (if required) and set DB env vars
+- [ ] Add TELEGRAM_BOT_TOKEN and GOOGLE_API_KEY env vars
+- [ ] Add RENDER_URL env var (public service URL)
+- [ ] Paste CORS patch and redeploy
+- [ ] Run `queries.sql` on DB
+- [ ] Test endpoints and bot functionality
+
+---
 
 ## Contribution Guidelines
 
