@@ -62,7 +62,7 @@
 * **AI Engine:** Google **Gemini Flash 2.0** API (via the AI Engine layer) for generating resume text and analyzing content. Gemini is Google’s latest state-of-the-art multimodal language model (released March 2025) with advanced reasoning abilities. Kenshi Resumes uses Gemini Flash 2.0 to power its AI content creation.
 * **Database:** PostgreSQL – a powerful, open-source relational database. It stores user resume records, user info (email, name), and any generated content or metadata.
 * **Styling:** Tailwind CSS for design and layout (utility classes enable rapid UI development).
-* **Deployment Platforms:** Frontend is designed to be deployed on Vercel (a cloud platform for frontend hosting and deployment). The backend is deployed on Railway (a cloud platform for hosting and deploying web services). These platforms offer seamless CI/CD: pushing code to GitHub can trigger automated deployments.
+* **Deployment Platforms:** Frontend is designed to be deployed on Vercel (a cloud platform for frontend hosting and deployment). The backend is deployed on Render (a cloud platform for hosting and deploying web services). These platforms offer seamless CI/CD: pushing code to GitHub can trigger automated deployments.
 
 The tech stack balances modern development speed with stability. (E.g., React and Express are widely used in industry, while Gemini provides cutting-edge AI capability.) The diagram below outlines the high-level architecture:
 
