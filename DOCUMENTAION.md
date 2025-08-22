@@ -4,30 +4,23 @@
 * **Audience:** Job seekers and general users, Developers, and Recruiters
 * **License:** MIT (see *License & Credits*)
 
-**Table of Contents:**
+## Table of Contents
 
-* [Project Overview](#project-overview)
-* [Key Features & Use Cases](#key-features--use-cases)
-* [Tech Stack](#tech-stack)
-* [Architecture & Folder Structure](#architecture--folder-structure)
-
-  * [Frontend Structure](#frontend-structure)
-  * [Backend Structure](#backend-structure)
-* [Backend API Documentation](#backend-api-documentation)
-
-  * [API Endpoints](#api-endpoints-)
-  * [AI Model Modules](#ai-model-modules)
-  * [Telegram Bot](#telegram-bot)
-* [Frontend Components & Interactions](#frontend-components--interactions)
-* [Setup & Installation](#setup--installation)
-* [Deployment](#deployment)
-
-  * [Frontend (Vercel)](#frontend-vercel)
-  * [Backend (Render)](#backend-render)
-* [Contribution Guidelines](#contribution-guidelines)
-* [License & Third-Party Credits](#license--third-party-credits)
+| **Section** | **Subsections** |
+|:-----------:|-----------------|
+| **[Project Overview](#project-overview)** | – |
+| **[Key Features & Use Cases](#key-features--use-cases)** | – |
+| **[Tech Stack](#tech-stack)** | – |
+| **[Architecture & Folder Structure](#architecture--folder-structure)** | [Frontend Structure](#frontend-structure)<br>[Backend Structure](#backend-structure) |
+| **[Backend API Documentation](#backend-api-documentation)** | [API Endpoints](#api-endpoints-)<br>[AI Model Modules](#ai-model-modules)<br>[Telegram Bot](#telegram-bot) |
+| **[Frontend Components & Interactions](#frontend-components--interactions)** | – |
+| **[Setup & Installation](#setup--installation)** | – |
+| **[Deployment](#deployment)** | [Frontend (Vercel)](#frontend-vercel)<br>[Backend (Render)](#backend-render) |
+| **[Contribution Guidelines](#contribution-guidelines)** | – |
+| **[License & Third-Party Credits](#license--third-party-credits)** | – |
 
 ---
+
 
 ## Project Overview
 
