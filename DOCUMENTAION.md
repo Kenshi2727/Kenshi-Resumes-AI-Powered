@@ -13,6 +13,7 @@
 | **[Tech Stack](#tech-stack)** | – |
 | **[Architecture & Folder Structure](#architecture--folder-structure)** | [Frontend Structure](#frontend-structure)<br>[Backend Structure](#backend-structure) |
 | **[Backend API Documentation](#backend-api-documentation)** | [API Endpoints](#api-endpoints-)<br>[AI Model Modules](#ai-model-modules)<br>[Telegram Bot](#telegram-bot) |
+| **[Database](#database-connection)** | [Schema](#database-schema)<br>[Queries](#how-the-db-client-is-used-in-routes)<br>[Connection Setup](#connection-setup)<br>[Troubleshooting](#troubleshooting) |
 | **[Frontend Components & Interactions](#frontend-components--interactions)** | – |
 | **[Setup & Installation](#setup--installation)** | – |
 | **[Deployment](#deployment)** | [Frontend (Vercel)](#frontend-vercel)<br>[Backend (Render)](#backend-render) |
@@ -949,6 +950,257 @@ Answered to:" + resp);
 ---
 
 
+# Database Connection
+
+> This document documents the database connection and related usage implemented in the Node.js/Express codebase.
+
+---
+
+## Overview
+
+The application uses the `pg` package and instantiates a single `pg.Client` configured from environment variables. The code expects a managed Postgres-compatible service (the code prints messages referencing "Neon Database"). All queries are executed using `db.query(...)` on the single `Client` instance which is exported as the default export.
+
+The code also:
+
+* uses an **in-memory multer storage** (`multer.memoryStorage()`) to accept uploaded PDF files and then stores the binary data into the database (`bytea` / binary column).
+* relies on parameterized queries (`$1, $2, ...`) to avoid SQL injection.
+
+---
+
+## Environment variables
+
+The following environment variables are used by the connection logic and server configuration:
+
+```text
+PORT            # optional, server port (defaults to 3000)
+DB_USER         # database username
+DB_HOST         # database host (hostname)
+DB_NAME         # database name
+DB_PASSWORD     # database password
+DB_PORT         # database port (numeric)
+```
+
+### Example `.env` (do not commit to source control)
+
+```env
+PORT=3000
+DB_USER=your_db_user
+DB_HOST=db.your-host.example
+DB_NAME=your_db_name
+DB_PASSWORD=supersecretpassword
+DB_PORT=5432
+```
+
+> The code calls `dotenv.config()` at the top, so these variables are read from the environment or `.env` file.
+
+---
+
+## Connection setup 
+
+The code creates a `pg.Client` like this (paraphrased):
+
+* `user`: `process.env.DB_USER`
+* `host`: `process.env.DB_HOST`
+* `database`: `process.env.DB_NAME`
+* `password`: `process.env.DB_PASSWORD`
+* `port`: `process.env.DB_PORT`
+* `ssl`: `{ rejectUnauthorized: false }`
+
+The client is then connected with `db.connect((err) => { ... })`. The callback prints either an error message or a success message and — on success — starts a 4-minute interval to run a simple `SELECT NOW()` query to keep the managed DB (Neon) from idling.
+
+**Important detail from the code:**
+
+* The code sets `ssl: { rejectUnauthorized: false }` (the comment says "for production, uncomment the ssl part" — but the current code already includes `ssl`. If you switch environments, ensure SSL settings match your DB provider requirements).
+
+---
+
+## Wake-up / keep-alive behavior
+
+After successful connection the code executes a periodic wake-up request every **4 minutes** (4 \* 60 \* 1000 ms):
+
+```js
+setInterval(async () => {
+  try {
+    const awakeTime = await db.query('SELECT NOW()');
+    console.log("NeonDB is awake!");
+    console.log("Checked at:", awakeTime.rows[0].now.toLocaleString());
+  } catch (error) {
+    console.error("Error waking up NeonDB:", error);
+    console.error("Checked at:", new Date().toLocaleString());
+  }
+}, 4 * 60 * 1000);
+```
+
+This is used to prevent the managed DB from going idle. Keep this interval if you rely on a serverless / autoscaling DB product that idles connections.
+
+---
+
+## Error handling & reconnect logic (commented in code)
+
+The repository contains a commented-out `db.on('error', ...)` block that demonstrates a reconnect pattern used by the author. Key points from that block:
+
+* It logs that NeonDB went idle and prints the time.
+* Calls `db.end()` to close the current connection, then creates a new `pg.Client` with the same configuration and calls `db.connect()` again.
+* Prints a reconnect message and time.
+
+**Note:** That reconnect logic is commented out. If you plan to use it, test carefully — re-creating `db` like that requires careful scoping and you must ensure all modules that import `db` continue to reference the re-created client. Consider using `pg.Pool` for robust connection handling in production.
+
+---
+
+## How the `db` client is used in routes
+
+The code performs standard parameterized queries across many routes. Highlights from the code (the exact queries are implemented in the application):
+
+* `INSERT` PDF file into `telegramusers` with `pdf` column (binary) and `fileName`:
+
+  ```sql
+  INSERT INTO telegramusers("documentId","userName", pdf, "fileName") VALUES($1,$2,$3,$4)
+  ```
+
+  where `req.file.buffer` is passed for `$3`.
+
+* Create `resume` record:
+
+  ```sql
+  INSERT INTO resume (title,"documentId","userEmail","userName") VALUES ($1, $2, $3, $4)
+  ```
+
+* Fetch resumes by user email:
+
+  ```sql
+  SELECT * FROM resume WHERE "userEmail" = $1
+  ```
+
+* Fetch a full document by `documentId` and populate related arrays from `experience`, `education`, `skills`. The code reads array columns and maps them into JSON objects before returning to client.
+
+* Update `resume` fields like `summery`, personal details or `themeColor` using `UPDATE resume SET ... WHERE "documentId" = $1`.
+
+* For collections (`experience`, `education`, `skills`) the code treats columns as arrays (e.g., `title`, `companyName`, `degree`, `name`, `rating`, etc.), updates them by replacing entire arrays via `UPDATE ... SET column = $1 WHERE "documentId" = $2`, and when missing inserts a skeleton row with `INSERT INTO experience ("documentId") VALUES ($1)` then updates.
+
+* Deletion of a document cascades to multiple tables via separate `DELETE FROM ... WHERE "documentId" = $1` statements.
+
+**Concurrency & transactions:** the current code runs separate queries sequentially with `await`. If you have multi-step operations that must be atomic (for example creating + updating related tables), consider wrapping them in a transaction (`BEGIN` / `COMMIT`) — the current code does not use explicit transactions.
+
+---
+
+## Database schema 
+
+```sql
+-- resume table
+CREATE TABLE resume (
+  id serial PRIMARY KEY,
+  title text,
+  "documentId" integer UNIQUE NOT NULL,
+  "userEmail" text,
+  "userName" text,
+  summery text,
+  "firstName" text,
+  "lastName" text,
+  "jobTitle" text,
+  address text,
+  phone text,
+  email text,
+  "themeColor" text
+);
+
+-- experience table: arrays for each field
+CREATE TABLE experience (
+  id serial PRIMARY KEY,
+  "documentId" integer UNIQUE NOT NULL,
+  title text[],
+  "companyName" text[],
+  city text[],
+  state text[],
+  "startDate" text[],
+  "endDate" text[],
+  "workSummery" text[]
+);
+
+-- education table: arrays
+CREATE TABLE education (
+  id serial PRIMARY KEY,
+  "documentId" integer UNIQUE NOT NULL,
+  degree text[],
+  university text[],
+  major text[],
+  "startDate" text[],
+  "endDate" text[],
+  description text[]
+);
+
+-- skills table: arrays
+CREATE TABLE skills (
+  id serial PRIMARY KEY,
+  "documentId" integer UNIQUE NOT NULL,
+  name text[],
+  rating integer[]
+);
+
+-- telegramusers table: store uploaded pdfs
+CREATE TABLE telegramusers (
+  id serial PRIMARY KEY,
+  "documentId" integer NOT NULL,
+  "userName" text,
+  pdf bytea,
+  "fileName" text
+);
+```
+
+**Notes:**
+
+* Columns like `title`, `companyName`, `degree`, `name`, etc. are stored as PostgreSQL arrays (e.g., `text[]`) because the code expects to iterate through `rows[0].title.length` and index into them.
+* `pdf` is stored as `bytea` to hold binary file buffers.
+* `documentId` is treated as the canonical identifier across tables. The code expects exactly one row per `documentId` in `resume`, `experience`, `education`, and `skills`.
+
+---
+
+## Best practices & recommendations (compatible with the current code)
+
+1. **Use connection pooling for production:** The code uses a single `pg.Client`. For higher throughput and robust reconnects, prefer `pg.Pool` and `pool.connect()` / `pool.query()`.
+
+2. **Use transactions for multi-step operations:** If you `INSERT` then `UPDATE` related rows, use `BEGIN` / `COMMIT` to keep operations atomic.
+
+3. **Avoid storing large files directly in the DB if you expect heavy traffic:** Storing PDFs in `bytea` is acceptable for small use, but for scale consider object storage (S3/MinIO) and store references in the DB.
+
+4. **Validate inputs:** The code trusts `req.body` and `req.params`. Add validation (e.g., `Joi`, `zod`) before querying the DB.
+
+5. **Be explicit about SSL in production:** Keep `ssl: { rejectUnauthorized: false }` only if your provider requires it. Prefer trusting CA or configure correctly for better security.
+
+6. **Add indexes if queries become slow:** Primary keys and an index on `"userEmail"` and `"documentId"` should help.
+
+7. **Be careful with the reconnect pattern:** Replacing the exported `db` object at runtime can break module references. Use pooling or a reconnect helper that maintains the same exported interface.
+
+---
+
+## Troubleshooting
+
+* **`Error connecting to Neon Database` logged:** verify env vars, network, and SSL settings. Check that `DB_HOST` and `DB_PORT` are correct and that the credentials are valid.
+* **Neon / serverless DB idling:** if you still get idle disconnects, either keep the wake-up `SELECT NOW()` interval (as the code does) or use a connection pool with a long-lived process.
+* **Binary data insertion fails:** ensure the column is `bytea` and that you pass `req.file.buffer` directly (as code does). For older `pg` versions you may need to use `Buffer.from(...)`.
+* **Arrays not behaving as expected in queries:** confirm the table columns are declared as `text[]` / `integer[]` as shown in the schema above.
+
+---
+
+## Where to find the `db` object in code
+
+* The database client is exported as `export default db;` at the bottom of the file. Other modules may import it as the default import.
+* Two additional named exports are present in the same file and used by other parts of the app:
+
+  * `export const sharedData = { buffer: null, fileName: null, id: null }` — used to temporarily store uploaded file buffers and identifiers.
+  * `export const feedback = [{ rating: -1, feedback: "No ratings given yet!" }];`
+
+---
+
+## Quick checklist to deploy successfully
+
+* [ ] Set environment variables (`DB_USER`, `DB_HOST`, `DB_NAME`, `DB_PASSWORD`, `DB_PORT`, `PORT`).
+* [ ] Ensure network rules (allowlist) on the DB provider allow connections from your server.
+* [ ] Confirm SSL requirements for your DB host and adjust `ssl` config accordingly.
+* [ ] Run the SQL DDL to create the tables (or use your migrations).
+* [ ] Test uploads and `SELECT NOW()` keep-alive once deployed.
+
+---
+
 ## Frontend Components & Interactions
 
 The React frontend is structured around user interaction with resume data. While the exact component file names may vary, the logical flow is:
@@ -1027,6 +1279,8 @@ Follow these steps to set up the project locally for development (each repo must
 Now you can use the app locally. When you click “Generate,” the frontend will call the local backend and populate the resume.
 
 ---
+
+
 
 # Deployment
 
