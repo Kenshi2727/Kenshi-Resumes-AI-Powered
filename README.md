@@ -18,7 +18,7 @@
 
 ## [Documentation](https://github.com/Kenshi2727/Kenshi-Resumes-AI-Powered/blob/main/DOCUMENTAION.md) <img src="https://cdn.pixabay.com/animation/2025/04/15/08/13/08-13-29-14_512.gif" height=30 />
 
-- [Download documentation (PDF)](./docs/DOCUMENTATION_Kenshi_Resumes.pdf)
+- [Download documentation (PDF)](md-to-github-dark-pdf/DOCUMENTAION-safe.pdf)
 ---
 ## 📸 Preview
 
