@@ -6,10 +6,10 @@ function About() {
     const { theme } = useContext(ThemeContext);
     return (
         <div className={(theme === 'light') ? 'min-h-screen flex items-center justify-center bg-gradient-to-r from-red-200 to-yellow-200' : 'min-h-screen flex items-center justify-center'}>
-            <div className={(theme === 'light') ? 'bg-white p-7 rounded-lg shadow-lg my-4 md:w-full md:max-w-7xl max-w-[21rem] md:h-[500px] flex flex-col sm:flex-row justify-center items-center gap-8 overflow-y-scroll border-l-4 border-primary' : 'p-7 rounded-lg shadow-lg my-4 shadow-[rgba(0,191,255,0.8)] md:w-full md:max-w-7xl max-w-[21rem] md:h-[500px] flex flex-col sm:flex-row justify-center items-center gap-8 overflow-y-scroll border-l-4 border-[rgba(0,191,255,0.8)]'}>
+            <div className={(theme === 'light') ? 'bg-white mx-8 p-7 rounded-lg shadow-lg my-4 md:w-full md:max-w-7xl max-w-[21rem] md:h-[500px] flex flex-col md:flex-row justify-center items-center gap-8 border-l-4 border-primary' : 'p-7 rounded-lg shadow-lg my-4 shadow-[rgba(0,191,255,0.8)] md:w-full md:max-w-7xl max-w-[21rem] md:h-[500px] flex flex-col mx-8 md:flex-row justify-center items-center gap-8 border-l-4 border-[rgba(0,191,255,0.8)]'}>
 
                 <h1 className='text-center'>About Kenshi Resumes</h1>
-                <p>
+                <p className='overflow-y-auto max-h-[400px]'>
                     Kenshi Resumes is your intelligent career companion, redefining the way modern professionals present themselves to the world. In today’s fast-paced, competitive job market, your resume isn’t just a document — it’s your personal brand, your first handshake, and often, your only chance to leave a lasting impression. At Kenshi Resumes, we understand this deeply. That’s why we built a platform that merges cutting-edge technology with elegant design to help you craft resumes that don’t just meet expectations — they exceed them.
 
                     Our mission is simple yet powerful: empower individuals to tell their professional stories with clarity, confidence, and creativity. Whether you're a fresh graduate seeking your first opportunity, a seasoned expert pivoting into a new domain, or a freelancer showcasing a dynamic portfolio, Kenshi Resumes equips you with the right tools to express your unique value.
